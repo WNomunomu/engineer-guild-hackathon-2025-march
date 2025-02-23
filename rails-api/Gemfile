@@ -49,3 +49,7 @@ end
 
 
 gem "devise", "~> 4.9"
+
+gem 'rspec-rails' # 追加
+gem 'factory_bot_rails' # 追加
+gem 'annotaterb'
