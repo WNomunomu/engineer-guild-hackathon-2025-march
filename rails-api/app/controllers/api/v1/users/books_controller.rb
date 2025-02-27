@@ -26,6 +26,16 @@ module Api
           books = @user.books
           render json: books
         end
+
+        def destroy
+          book = Book.find_by(isbn: params[:isbn])
+          user_book = current_api_v1_user.user_books.find_by(book: book)
+          begin user_book.destroy!
+            render json: { message: 'Book unregistered successfully' }
+          rescue
+            render json: { error: 'Failed to unregister book' }, status: :unprocessable_entity
+          end
+        end
       end
     end
   end
