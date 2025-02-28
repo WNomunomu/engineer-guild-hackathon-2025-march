@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_24_105913) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_24_102030) do
   create_table "book_categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "book_id", null: false
     t.bigint "category_id", null: false
