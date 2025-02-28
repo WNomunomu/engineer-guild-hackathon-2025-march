@@ -109,7 +109,10 @@ export default function UserHome() {
         </div>
       </div>
       <div className="d-flex row mb-3">
-        <div className="col-8">
+        <div
+          className="col-8"
+          onClick={() => router.push(`/${user_name}/exp_logs`)}
+        >
           <LevelCard LevelInfoArray={levelData} />
         </div>
         <div className="col-4">
@@ -119,7 +122,7 @@ export default function UserHome() {
           />
         </div>
       </div>
-      <div>
+      <div onClick={() => router.push(`/${user_name}/reading_logs`)}>
         <ContributionCalenderCard />
       </div>
       <BooksListCard />

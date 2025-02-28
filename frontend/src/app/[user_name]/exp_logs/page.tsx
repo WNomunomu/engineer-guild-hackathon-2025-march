@@ -123,7 +123,6 @@ export default function ExpLogs() {
 
   return (
     <>
-      <div className="text-center">ここに経験値ログを見るページ</div>
       <div className="text-center my-4">
         <button
           className="btn btn-primary"
