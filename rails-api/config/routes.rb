@@ -12,7 +12,7 @@ Rails.application.routes.draw do
         resources :books, only: [:index, :create] do
           collection do
             delete ':isbn', to: 'books#destroy'
-            patch ':isbn', to: 'books#update'
+            # patch ':isbn', to: 'books#update'
           end
         end
 
