@@ -28,7 +28,7 @@ export const BookThumbnail = ({ isbn }: BookThumbnailProps) => {
         );
       } catch (error) {
         console.error(`Failed to fetch cover for ISBN: ${isbn}`, error);
-        setCover("/placeholder.jpg"); // 画像が取得できない場合、プレースホルダー画像を表示
+        setCover(`https://ndlsearch.ndl.go.jp/thumbnail/${isbn}.jpg`); // 画像が取得できない場合、プレースホルダー画像を表示
       }
     };
 
@@ -38,10 +38,10 @@ export const BookThumbnail = ({ isbn }: BookThumbnailProps) => {
   return (
     <div
       className="cursor-pointer"
-      onClick={() => router.push(`${user_name}/books/${isbn}`)}
+      onClick={() => router.push(`/${user_name}/books/${isbn}`)}
     >
       <Image
-        src={cover || "/placeholder.jpg"}
+        src={cover || "/noimage.jpg"}
         alt={`Book cover of ${isbn}`}
         width={128}
         height={192}

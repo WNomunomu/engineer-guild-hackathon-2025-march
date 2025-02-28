@@ -1,3 +1,14 @@
+"use client";
+
+import { ContributionCalenderCard } from "@/components/ContributionCalenderCard";
+
 export default function ReadingLogs() {
-  return <div className="text-center">ここに読書ログを見るページ</div>;
+  return (
+    <>
+      <h1 className="mb-4 mt-4 ms-4">読書ログ</h1>
+      <div className="mx-4">
+        <ContributionCalenderCard />
+      </div>
+    </>
+  );
 }
