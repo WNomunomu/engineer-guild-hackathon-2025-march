@@ -42,7 +42,7 @@ export function LoginForm() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-control"
+              className="form-control form-original"
               required
             />
           </div>
@@ -55,11 +55,11 @@ export function LoginForm() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="form-control"
+              className="form-control form-original"
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100">
+          <button type="submit" className="btn btn-original w-100">
             ログイン
           </button>
         </form>
