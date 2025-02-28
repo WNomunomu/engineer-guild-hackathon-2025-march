@@ -12,11 +12,20 @@ type BookStackCardProps = {
   unreadBooks: BookData[];
 };
 
-const BookStack = ({ bookDataArray, offsets }: { bookDataArray: BookData[]; offsets: number[] }) => {
+const BookStack = ({
+  bookDataArray,
+  offsets,
+}: {
+  bookDataArray: BookData[];
+  offsets: number[];
+}) => {
   const colorVariants = ["#1e7a63", "#2da882", "#39b894"];
 
   return (
-    <div className="d-flex flex-column align-items-center overflow-auto p-2" style={{ maxHeight: "350px" }}>
+    <div
+      className="d-flex flex-column align-items-center overflow-auto p-2"
+      style={{ maxHeight: "350px" }}
+    >
       {bookDataArray.map((bookData, index) => (
         <div
           key={index}
@@ -27,7 +36,7 @@ const BookStack = ({ bookDataArray, offsets }: { bookDataArray: BookData[]; offs
             height: `${Math.min(80, Math.max(20, bookData.totalPage / 7))}px`, // ページ数で高さ調整
             lineHeight: "1.2",
           }}
-        > 
+        >
           {bookData.title}
         </div>
       ))}
@@ -35,7 +44,10 @@ const BookStack = ({ bookDataArray, offsets }: { bookDataArray: BookData[]; offs
   );
 };
 
-export const BookStackCard = ({ alreadyReadBooks, unreadBooks }: BookStackCardProps) => {
+export const BookStackCard = ({
+  alreadyReadBooks,
+  unreadBooks,
+}: BookStackCardProps) => {
   const [showReadBooks, setShowReadBooks] = useState<boolean>(true);
 
   // 既読本と未読本のオフセットを独立に管理
@@ -43,11 +55,15 @@ export const BookStackCard = ({ alreadyReadBooks, unreadBooks }: BookStackCardPr
   const [unreadOffsets, setUnreadOffsets] = useState<number[]>([]);
 
   useEffect(() => {
-    setReadOffsets(alreadyReadBooks.map(() => Math.floor(Math.random() * 50) - 20));
+    setReadOffsets(
+      alreadyReadBooks.map(() => Math.floor(Math.random() * 50) - 20)
+    );
   }, [alreadyReadBooks, alreadyReadBooks.length]);
 
   useEffect(() => {
-    setUnreadOffsets(unreadBooks.map(() => Math.floor(Math.random() * 50) - 20));
+    setUnreadOffsets(
+      unreadBooks.map(() => Math.floor(Math.random() * 50) - 20)
+    );
   }, [unreadBooks, unreadBooks.length]);
 
   const bookDataArray = showReadBooks ? alreadyReadBooks : unreadBooks;
@@ -59,17 +75,21 @@ export const BookStackCard = ({ alreadyReadBooks, unreadBooks }: BookStackCardPr
         <div className="btn-group w-100 mb-3">
           <button
             type="button"
-            className={`btn ${showReadBooks ? "btn-success" : "btn-outline-success"}`}
+            className={`btn ${
+              showReadBooks ? "btn-original" : "btn-outline-original"
+            }`}
             onClick={() => setShowReadBooks(true)}
           >
-            既読本
+            既読本の山
           </button>
           <button
             type="button"
-            className={`btn ${!showReadBooks ? "btn-warning" : "btn-outline-warning"}`}
+            className={`btn ${
+              !showReadBooks ? "btn-original" : "btn-outline-original"
+            }`}
             onClick={() => setShowReadBooks(false)}
           >
-            未読本
+            未読本の山
           </button>
         </div>
         <BookStack bookDataArray={bookDataArray} offsets={offsets} />
