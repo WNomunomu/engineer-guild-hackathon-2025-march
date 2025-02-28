@@ -1,0 +1,92 @@
+name: Docker Image CI for WEB
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+      attestations: write
+      id-token: write
+    outputs:
+      web_digest: ${{ steps.push-web.outputs.digest }}
+      # changed: ${{ steps.check_changes.outputs.web-changed }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: main
+
+    # - name: Check for changes in next directory
+    #   id: check_changes
+    #   run: |
+    #     if git diff --quiet stable^ stable -- next; then
+    #       echo "No changes detected in next directory."
+    #       echo "web-changed=false" >> $GITHUB_OUTPUT
+    #     else
+    #       echo "Changes detected in next directory."
+    #       echo "web-changed=true" >> $GITHUB_OUTPUT
+    #     fi
+    
+    - name: Log in to Docker Hub for web
+      # if: steps.check_changes.outputs.web-changed == 'true'
+      uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      with:
+        username: ${{ secrets.DOCKER_USERNAME_WEB }}
+        password: ${{ secrets.DOCKER_PASSWORD_WEB }}
+
+    - name: Extract metadata (tags, labels) for Docker
+      # if: steps.check_changes.outputs.web-changed == 'true'
+      id: meta-web
+      uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      with:
+        images: ${{ secrets.DOCKER_USERNAME_WEB }}/web
+
+    - name: Build and push web-server Docker image
+      # if: steps.check_changes.outputs.web-changed == 'true'
+      id: push-web
+      uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile.web
+        push: true
+        tags: ${{ steps.meta-web.outputs.tags }}
+        labels: ${{ steps.meta-web.outputs.labels }}
+
+  update_manifest_repository:
+    name: Update manifest repository
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+      attestations: write
+      id-token: write
+    needs: push_to_registry
+    # if: ${{ needs.push_to_registry.outputs.changed == 'true' }}
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ secrets.MANIFEST_REPO_OWNER }}/${{ secrets.MANIFESTS_REPO }}
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+    - name: Update image in Kubernetes manifest using sed
+      run: |
+        sed -i 's|image: .*|image: ${{ secrets.DOCKER_USERNAME_WEB }}/web@${{ needs.push_to_registry.outputs.web_digest }}|' ./overlays/lab/web.yaml
+
+    - name: Commit web digest changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add ./overlays/lab/web.yaml
+        git commit -m "Update web digest in Kubernetes manifest"
+        git push

@@ -1,0 +1,13 @@
+FROM ruby:3.3.6
+
+RUN apt-get update -qq && apt-get install -y nodejs npm && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/rails
+
+COPY ./Gemfile ./Gemfile.lock ./
+
+RUN bundle install
+
+COPY . .
+
+CMD ["bash", "-c", "bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"]
