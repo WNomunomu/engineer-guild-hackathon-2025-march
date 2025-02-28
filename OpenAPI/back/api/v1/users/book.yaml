@@ -59,3 +59,36 @@ register_user_book:
       description: 認証失敗
     '422':
       description: パラメーターが不正
+
+delete_user_book:
+  tags:
+    - users
+  summary: 書籍を登録解除
+  description: 指定した isbn の書籍を登録解除する
+  parameters:
+    - $ref: '../components.yaml#/headers_auth_token/client'
+    - $ref: '../components.yaml#/headers_auth_token/access_token'
+    - $ref: '../components.yaml#/headers_auth_token/uid'
+    - name: isbn
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 登録を解除する書籍のISBN
+  responses:
+    '200':
+      description: 登録解除成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Book unregistered successfully"
+    '401':
+      description: 認証失敗
+    '404':
+      description: 書籍が見つからない
+    '422':
+      description: 書籍が登録されていない、または登録解除に失敗
