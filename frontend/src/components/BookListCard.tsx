@@ -14,7 +14,7 @@ const isbnList = [
 
 export const BooksListCard = () => {
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 mb-5">
       <h1>本棚</h1>
       <div className="row mx-0">
         {isbnList.map((isbn) => (
