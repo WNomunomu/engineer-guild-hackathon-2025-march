@@ -32,16 +32,16 @@ RSpec.describe "Api::V1::User::ExpLogs", type: :request do
           {
             "category_id"   => category1.id,
             "category_name" => category1.category,
-            "pages_read"    => 300
+            "exp"    => (300 * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
           },
           {
             "category_id"   => category2.id,
             "category_name" => category2.category,
-            "pages_read"    => 200
+            "exp"    => (200 * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
           },
         ]
       end
-      it "進捗が取得できること" do
+      it "expが取得できること" do
         get "api/v1/users/exp_logs", headers: header
         expect(response).to have_http_status(200)
         expect(JSON.parse(response.body)).to eq(expected_body)
