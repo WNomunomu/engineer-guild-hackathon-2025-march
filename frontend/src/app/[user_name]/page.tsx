@@ -66,22 +66,46 @@ export default function UserHome() {
       <p>積読を減らして、経験値を貯めよう！！📚✨</p>
       <div className="d-flex row mb-3">
         <div className="pe-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="menu_book"
+            achievement="12"
+            category="累計読破数"
+          />
         </div>
         <div className="px-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="description"
+            achievement="2,532"
+            category="累計ページ数"
+          />
         </div>
         <div className="px-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="today"
+            achievement="78"
+            category="連続読書日数"
+          />
         </div>
         <div className="px-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="exposure_plus_1"
+            achievement="13,298"
+            category="累計獲得経験値"
+          />
         </div>
         <div className="px-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="counter_7"
+            achievement="66"
+            category="今週のページ数"
+          />
         </div>
         <div className="px-s col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="dark_mode"
+            achievement="66"
+            category="今月のページ数"
+          />
         </div>
       </div>
       <div className="d-flex row mb-3">

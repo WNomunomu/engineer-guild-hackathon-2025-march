@@ -45,16 +45,16 @@ export const ContributionCalenderCard = () => {
             />
           </div>
           <div className="col-1">
-            <button type="button" className="btn btn-success w-100 mb-1">
+            <button type="button" className="btn btn-original w-100 mb-1">
               2025
             </button>
-            <button type="button" className="btn btn-success w-100 mb-1">
+            <button type="button" className="btn btn-original w-100 mb-1">
               2024
             </button>
-            <button type="button" className="btn btn-success w-100 mb-1">
+            <button type="button" className="btn btn-original w-100 mb-1">
               2023
             </button>
-            <button type="button" className="btn btn-success w-100">
+            <button type="button" className="btn btn-original w-100">
               2022
             </button>
           </div>

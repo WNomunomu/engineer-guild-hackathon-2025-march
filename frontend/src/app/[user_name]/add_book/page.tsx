@@ -113,7 +113,7 @@ export default function AddBook() {
         <input
           type="text"
           id="isbn"
-          className="form-control"
+          className="form-control form-original"
           value={isbn}
           onChange={handleIsbnChange}
           placeholder="ISBN番号を入力"
@@ -163,7 +163,7 @@ export default function AddBook() {
                 </div>
 
                 <button
-                  className="btn btn-success mt-3"
+                  className="btn btn-original mt-3"
                   onClick={() => handleAddBook(book)}
                 >
                   この本を追加する

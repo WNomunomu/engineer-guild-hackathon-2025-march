@@ -1,0 +1,38 @@
+:root {
+  --primary-color: rgba(36, 148, 116, 1);
+  --secondary-color: rgba(36, 148, 116, 0.8);
+  --tertiary-color: rgba(36, 148, 116, 0.4);
+}
+
+.btn-original {
+  --bs-btn-color: #ffffff;
+  --bs-btn-bg: var(--primary-color);
+  --bs-btn-border-color: var(--primary-color);
+  --bs-btn-active-color: #ffffff;
+  --bs-btn-active-bg: var(--secondary-color);
+  --bs-btn-active-border-color: var(--secondary-color);
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-hover-bg: var(--secondary-color);
+  --bs-btn-hover-border-color: var(--secondary-color);
+  --bs-link-color-rgb: 147, 216, 80;
+  --bs-link-hover-color-rgb: 255, 255, 255;
+}
+
+.btn-outline-original {
+  --bs-btn-color: var(--primary-color);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--primary-color);
+  --bs-btn-active-color: #ffffff;
+  --bs-btn-active-bg: var(--primary-color);
+  --bs-btn-active-border-color: var(--primary-color);
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-hover-bg: var(--primary-color);
+  --bs-btn-hover-border-color: var(--primary-color);
+  --bs-link-color-rgb: 36, 148, 116;
+  --bs-link-hover-color-rgb: 255, 255, 255;
+}
+
+.form-original:focus {
+  border-color: var(--secondary-color) !important;
+  box-shadow: 0 0 0 0.25rem var(--tertiary-color) !important;
+}
