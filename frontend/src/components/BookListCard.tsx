@@ -1,94 +1,25 @@
-// import { useBooks } from "@/hooks/useBooks";
-import Image from "next/image";
-// import { Spinner } from "react-bootstrap";
+import { BookThumbnail } from "./BookThumbnail";
+// DBからuserに紐づいた本のリストを取得
+const isbnList = [
+  "9784048930543",
+  "9784295012757",
+  "9784873118468",
+  "9784774178660",
+  "9784274224478",
+  "9784797397642",
+  "9784865941951",
+  "9784873118406",
+  "9784297128463",
+];
 
 export const BooksListCard = () => {
-  // const { books, isLoading, isError } = useBooks();
-
-  // if (isLoading) return <Spinner animation="border" />;
-  // if (isError) return <p className="text-danger">エラーが発生しました。</p>;
-
-  const books = [
-    {
-      id: 1,
-      title: "ネットワークはなぜつながるのか",
-      author: "戸根勤",
-      image_url: "https://placehold.co/150x200", // 仮の画像
-      categories: [{ id: 1, category: "ネットワーク" }],
-      total_pages: 320,
-    },
-    {
-      id: 2,
-      title: "リーダブルコード",
-      author: "Dustin Boswell",
-      image_url: "https://placehold.co/150x200",
-      categories: [{ id: 2, category: "プログラミング" }],
-      total_pages: 256,
-    },
-    {
-      id: 3,
-      title: "ゼロから作る Deep Learning",
-      author: "斎藤康毅",
-      image_url: "https://placehold.co/150x200",
-      categories: [{ id: 3, category: "AI・機械学習" }],
-      total_pages: 384,
-    },
-    {
-      id: 4,
-      title: "ネットワークはなぜつながるのか",
-      author: "戸根勤",
-      image_url: "https://placehold.co/150x200", // 仮の画像
-      categories: [{ id: 1, category: "ネットワーク" }],
-      total_pages: 320,
-    },
-    {
-      id: 5,
-      title: "リーダブルコード",
-      author: "Dustin Boswell",
-      image_url: "https://placehold.co/150x200",
-      categories: [{ id: 2, category: "プログラミング" }],
-      total_pages: 256,
-    },
-    {
-      id: 6,
-      title: "ゼロから作る Deep Learning",
-      author: "斎藤康毅",
-      image_url: "https://placehold.co/150x200",
-      categories: [{ id: 3, category: "AI・機械学習" }],
-      total_pages: 384,
-    },
-  ];
-
   return (
     <div className="container mt-4">
-      <h1>技術書一覧</h1>
-      <div className="row">
-        {books?.map((book) => (
-          <div key={book.id} className="col-md-2 mb-4">
-            <div className="card">
-              {book.image_url && (
-                <div
-                  className="position-relative"
-                  style={{ width: "100%", height: "200px" }}
-                >
-                  <Image
-                    src={book.image_url}
-                    alt={book.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="card-img-top"
-                  />
-                </div>
-              )}
-              <div className="card-body">
-                <h5 className="card-title">{book.title}</h5>
-                <p className="card-text">著者: {book.author}</p>
-                <p className="card-text">
-                  カテゴリ: {book.categories.map((c) => c.category).join(", ")}
-                </p>
-                <p className="card-text">総ページ数: {book.total_pages}</p>
-              </div>
-            </div>
+      <h1>本棚</h1>
+      <div className="row mx-0">
+        {isbnList.map((isbn) => (
+          <div key={isbn} className="col-12 col-sm-6 col-md-4 col-lg-2 mt-4">
+            <BookThumbnail isbn={isbn} />
           </div>
         ))}
       </div>

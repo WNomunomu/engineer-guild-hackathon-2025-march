@@ -69,7 +69,7 @@ const initialLevelData = [
 
 - title: 'GCPの教科書'
 - category: 'クラウド'
-- isbn: '978-4865941951'
+- isbn: '9784865941951'
 
 - title: '入門kubernetes'
 - category: 'インフラ','CI/CD'
@@ -77,7 +77,7 @@ const initialLevelData = [
 
 - title: '達人が教えるWebパフォーマンスチューニング'
 - category: 'web'
-- isbn: '978-4297128463'
+- isbn: '9784297128463'
 
 */
 
