@@ -36,7 +36,7 @@ export const Sidebar = () => {
           href={user_name ? `/${user_name}` : "/"}
           className="text-white text-decoration-none"
         >
-          読書王
+          HackBook
         </Link>
       </h3>
       <ul className="nav nav-pills flex-column mb-auto">
@@ -66,7 +66,7 @@ export const Sidebar = () => {
             </li>
             <li>
               <Link
-                href={`/${user_name}/reading-log`}
+                href={`/${user_name}/reading_logs`}
                 className="nav-link text-white d-flex align-items-center"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
@@ -77,13 +77,24 @@ export const Sidebar = () => {
             </li>
             <li>
               <Link
-                href={`/${user_name}/level`}
+                href={`/${user_name}/exp_logs`}
                 className="nav-link text-white d-flex align-items-center"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   military_tech
                 </span>
                 レベルを見る
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/${user_name}/progress`}
+                className="nav-link text-white d-flex align-items-center"
+              >
+                <span className="material-symbols-outlined fs-5 me-2">
+                  edit_note
+                </span>
+                読書記録する
               </Link>
             </li>
           </>
