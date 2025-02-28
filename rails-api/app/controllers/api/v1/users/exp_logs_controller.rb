@@ -6,7 +6,6 @@ module Api
 
         def index
           # current_user の reading_logs からカテゴリごとの合計ページ数を取得
-          # ※ has_many :categories, through: :book_categories が Book にある想定
           category_pages = current_api_v1_user.reading_logs
             .joins(book: :categories)
             .group('categories.id', 'categories.category')
@@ -21,7 +20,7 @@ module Api
             {
               category_id: category_id,
               category_name: category_name,
-              pages_read: pages_read
+              exp: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
             }
           end
         
