@@ -92,35 +92,41 @@ export default function BookDetail() {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center">本の詳細</h1>
+      <h1 className="text-center mt-4 mb-4">本の詳細</h1>
 
-      {loading && <div className="text-center">読み込み中...</div>}
+      {loading && (
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">読み込み中...</span>
+          </div>
+        </div>
+      )}
 
       {error && (
         <div className="alert alert-danger mt-3" role="alert">
-          {error}
+          <strong>エラー:</strong> {error}
         </div>
       )}
 
       {bookData && (
-        <div className="row d-flex flex-wrap mt-4 mx-5">
+        <div className="row d-flex flex-wrap mx-5">
           {/* Left Section - Book Details */}
           <div className="col-md-6 col-12 mb-4">
-            <div className="card shadow-lg">
+            <div className="card shadow-lg border-light">
               <div className="card-body">
-                <h2 className="card-title text-dark">
+                <h2 className="card-title text-dark mb-3">
                   {bookData.summary.title}
                 </h2>
-                <p className="card-text">
+                <p className="card-text mb-2">
                   <strong>著者:</strong> {bookData.summary.author}
                 </p>
-                <p className="card-text">
+                <p className="card-text mb-2">
                   <strong>出版社:</strong> {bookData.summary.publisher}
                 </p>
-                <p className="card-text">
+                <p className="card-text mb-2">
                   <strong>発行年:</strong> {bookData.summary.pubdate}
                 </p>
-                <p className="card-text">
+                <p className="card-text mb-4">
                   <strong>ページ数:</strong> {bookData.summary.pages || "不明"}
                 </p>
 
@@ -130,8 +136,8 @@ export default function BookDetail() {
                     alt={`Cover of ${bookData.summary.title}`}
                     width={200}
                     height={300}
-                    className="img-fluid rounded shadow-sm"
-                    unoptimized={true} // Google Books のURLをそのまま使う場合は必要
+                    className="img-fluid rounded shadow-sm mb-3"
+                    unoptimized={true}
                   />
                 </div>
               </div>
@@ -140,47 +146,52 @@ export default function BookDetail() {
 
           {/* Right Section - Progress & Categories */}
           <div className="col-md-6 col-12 mb-4">
-            <div className="card shadow-lg h-100">
+            <div className="card shadow-lg h-100 border-light">
               <div className="card-body">
-                <h4 className="card-title text-primary">進捗</h4>
-                <p className="card-text">
-                  現在読んだページ数: {currentPage} / {bookData.summary.pages}
+                <h4 className="card-title text-primary mb-4">進捗</h4>
+
+                <p className="card-text mb-3">
+                  現在読んだページ数: <strong>{currentPage}</strong> /{" "}
+                  {bookData.summary.pages}
                 </p>
 
-                {showProgressForm && (
+                {showProgressForm ? (
                   <>
-                    <input
-                      type="number"
-                      className="form-control mb-3"
-                      value={currentPage}
-                      onChange={(e) => setCurrentPage(Number(e.target.value))}
-                      min={0}
-                      max={Number(bookData.summary.pages)}
-                    />
-                    <div className="mt-4 text-center">
+                    <div className="input-group mb-4">
+                      <input
+                        type="number"
+                        className="form-control"
+                        value={currentPage}
+                        onChange={(e) => setCurrentPage(Number(e.target.value))}
+                        min={0}
+                        max={Number(bookData.summary.pages)}
+                        placeholder="進捗を入力"
+                      />
+                    </div>
+                    <div className="text-center">
                       <button
                         onClick={handleProgressUpdate}
-                        className="btn btn-primary w-auto"
+                        className="btn btn-primary w-75 py-2"
                       >
                         進捗を登録
                       </button>
                     </div>
                   </>
-                )}
-
-                {!showProgressForm && (
-                  <div className="mt-4 text-center">
+                ) : (
+                  <div className="text-center mt-3">
                     <button
                       onClick={handleUpdateButtonClick}
-                      className="btn btn-secondary w-auto"
+                      className="btn btn-outline-secondary w-75 py-2"
                     >
                       進捗を更新
                     </button>
                   </div>
                 )}
 
-                <h5 className="card-title text-primary mt-4">カテゴリ</h5>
-                <CategoryList categories={categories} />
+                <div className="mt-4">
+                  <h5 className="card-title text-primary">カテゴリ</h5>
+                  <CategoryList categories={categories} />
+                </div>
               </div>
             </div>
           </div>
