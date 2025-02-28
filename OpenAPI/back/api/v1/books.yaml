@@ -1,4 +1,6 @@
 get_books:
+  tags:
+    - books
   summary: 書籍一覧を取得
   description: すべての書籍のリストを取得する。
   responses:
@@ -24,6 +26,8 @@ get_books:
                 example: "Internal Server Error"
 
 create_book:
+  tags:
+    - books
   summary: 書籍を作成
   description: 書籍のタイトル、著者、ページ数、ISBN を受け取り、新しい書籍を作成する。
   requestBody:

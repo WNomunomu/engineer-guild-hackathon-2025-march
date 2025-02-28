@@ -31,6 +31,8 @@ paths:
       $ref: './api/v1/users/book.yaml#/get_user_books'
     post:
       $ref: './api/v1/users/book.yaml#/register_user_book'
+    delete:
+      $ref: './api/v1/users/book.yaml#/delete_user_book'
   /api/v1/users/progress:
     get:
       $ref: './api/v1/users/progress.yaml#/get_progress'
