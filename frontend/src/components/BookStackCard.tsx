@@ -12,7 +12,7 @@ type BookStackCardProps = {
   unreadBooks: BookData[];
 };
 
-const BookStack = ({
+export const BookStack = ({
   bookDataArray,
   offsets,
 }: {
