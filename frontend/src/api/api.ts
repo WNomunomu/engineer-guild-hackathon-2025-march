@@ -21,7 +21,7 @@ export const apiV1Get = async (url: string) => {
   }
 };
 
-export const apiV1Post = async (url: string, data?: any) => {
+export const apiV1Post = async (url: string, data = {}) => {
   const config = getAuthHeaders();
   try {
     const response = await apiClient.post(url, data, { headers: config });
@@ -31,7 +31,7 @@ export const apiV1Post = async (url: string, data?: any) => {
   }
 };
 
-export const apiV1Put = async (url: string, data?: any) => {
+export const apiV1Put = async (url: string, data = {}) => {
   const config = getAuthHeaders();
   try {
     const response = await apiClient.put(url, data, { headers: config });
