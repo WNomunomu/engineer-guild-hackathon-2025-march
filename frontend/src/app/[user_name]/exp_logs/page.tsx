@@ -90,7 +90,7 @@ export default function ExpLogs() {
     <>
       <div className="text-center my-4">
         <button
-          className="btn btn-primary"
+          className="btn btn-original"
           onClick={() => setShowForm(!showForm)}
         >
           進捗を登録
@@ -107,7 +107,7 @@ export default function ExpLogs() {
               id="bookSelect"
               value={selectedBook}
               onChange={(e) => setSelectedBook(e.target.value)}
-              className="form-select"
+              className="form-select form-select-original"
             >
               <option value="">本を選択</option>
               {mockUnreadBooks.map((book) => (
@@ -127,7 +127,7 @@ export default function ExpLogs() {
               value={readPages}
               onChange={(e) => setReadPages(e.target.value)}
               placeholder="読んだページ数"
-              className="form-control"
+              className="form-control form-control-original"
             />
           </div>
           {error && <p className="text-danger">{error}</p>}
