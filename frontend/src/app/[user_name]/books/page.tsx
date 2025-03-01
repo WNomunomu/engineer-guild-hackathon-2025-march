@@ -1,3 +1,16 @@
+"use client";
+
+import { BooksListCard } from "@/components/BookListCard";
+import { useParams } from "next/navigation";
+
 export default function Books() {
-  return <div className="text-center">ここに本の一覧</div>;
+  const { user_name } = useParams();
+  return (
+    <div className="mt-5">
+      <h1 className="text-center mb-4 mt-4">{user_name}さんの本棚</h1>
+      <div className="mx-auto w-75">
+        <BooksListCard />
+      </div>
+    </div>
+  );
 }

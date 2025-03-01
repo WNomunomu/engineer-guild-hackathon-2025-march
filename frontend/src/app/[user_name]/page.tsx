@@ -36,28 +36,54 @@ export default function UserHome() {
   if (user == null) return <></>;
 
   const levelData = [
-    { category: "frontend", level: 7 },
-    { category: "backend", level: 5 },
-    { category: "infrastructure", level: 8 },
+    { category: "Computer Science", level: 7 },
+    { category: "Backend", level: 5 },
+    { category: "Infrastructure", level: 8 },
     { category: "CI/CD", level: 6 },
-    { category: "frontend", level: 7 },
-    { category: "backend", level: 5 },
-    { category: "infrastructure", level: 8 },
-    { category: "CI/CD", level: 6 },
+    { category: "Network", level: 6 },
+    { category: "Cloud", level: 5 },
+    { category: "Web", level: 6 },
+    { category: "Go", level: 3 },
+    { category: "Python", level: 2 },
   ];
 
   const mockAlreadyReadBooks = [
-    { title: "JavaScriptの本", category: "Frontend", totalPage: 250 },
-    { title: "Reactの本", category: "Frontend", totalPage: 400 },
-    { title: "Node.jsの本", category: "Backend", totalPage: 350 },
-    { title: "データベースの本", category: "Database", totalPage: 500 },
+    { title: "入門kubernetes", category: "infrastructure", totalPage: 320 },
+    {
+      title: "達人が教えるWebパフォーマンスチューニング",
+      category: "web",
+      totalPage: 370,
+    },
+    { title: "GCPの教科書", category: "cloud", totalPage: 450 },
+    { title: "nginx実践入門", category: "infrastructure", totalPage: 280 },
   ];
 
   const mockUnreadBooks = [
-    { title: "TypeScriptの本", category: "Frontend", totalPage: 230 },
-    { title: "Go言語の本", category: "Backend", totalPage: 532 },
-    { title: "Pythonの本", category: "Machine Learning", totalPage: 420 },
-    { title: "Dockerの本", category: "DevOps", totalPage: 193 },
+    {
+      title: "入門 コンピュータ科学 ITを支える技術と理論の基礎知識",
+      category: "Computer Science",
+      totalPage: 300,
+    },
+    {
+      title: "Kubernetes CI/CDパイプラインの実装",
+      category: "Infrastructure",
+      totalPage: 350,
+    },
+    { title: "Go言語による並行処理", category: "Backend", totalPage: 400 },
+    { title: "nginx実践入門", category: "Infrastructure", totalPage: 280 },
+    { title: "マスタリングTCP/IP―入門編", category: "Network", totalPage: 350 },
+    {
+      title: "本気で学ぶ Linux実践入門",
+      category: "Infrastructure",
+      totalPage: 500,
+    },
+    { title: "GCPの教科書", category: "Cloud", totalPage: 450 },
+    { title: "入門kubernetes", category: "Infrastructure", totalPage: 320 },
+    {
+      title: "達人が教えるWebパフォーマンスチューニング",
+      category: "Web",
+      totalPage: 370,
+    },
   ];
 
   return (
@@ -66,26 +92,53 @@ export default function UserHome() {
       <p>積読を減らして、経験値を貯めよう！！📚✨</p>
       <div className="d-flex row mb-3">
         <div className="pe-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="menu_book"
+            achievement="12"
+            category="累計読破数"
+          />
         </div>
         <div className="px-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="description"
+            achievement="2,532"
+            category="累計ページ数"
+          />
         </div>
         <div className="px-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="today"
+            achievement="78"
+            category="連続読書日数"
+          />
         </div>
         <div className="px-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="exposure_plus_1"
+            achievement="13,298"
+            category="累計獲得経験値"
+          />
         </div>
         <div className="px-3 col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="counter_7"
+            achievement="66"
+            category="今週のページ数"
+          />
         </div>
         <div className="px-s col-2">
-          <AchievementCard icon="menu_book" achievement="66" category="book" />
+          <AchievementCard
+            icon="dark_mode"
+            achievement="66"
+            category="今月のページ数"
+          />
         </div>
       </div>
       <div className="d-flex row mb-3">
-        <div className="col-8">
+        <div
+          className="col-8"
+          onClick={() => router.push(`/${user_name}/exp_logs`)}
+        >
           <LevelCard LevelInfoArray={levelData} />
         </div>
         <div className="col-4">
@@ -95,7 +148,7 @@ export default function UserHome() {
           />
         </div>
       </div>
-      <div>
+      <div onClick={() => router.push(`/${user_name}/reading_logs`)}>
         <ContributionCalenderCard />
       </div>
       <BooksListCard />
