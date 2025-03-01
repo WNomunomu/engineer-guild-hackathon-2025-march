@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:3001";
+const API_BASE_URL = "http://localhost:3001/api/v1";
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -9,5 +9,3 @@ export const apiClient = axios.create({
   },
   withCredentials: true,
 });
-
-export const fetcher = (url: string) => apiClient.get(url).then((res) => res.data);

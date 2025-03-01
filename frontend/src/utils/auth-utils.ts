@@ -1,6 +1,5 @@
+import { apiClient } from "@/api/api";
 import axios from "axios";
-
-const API_BASE_URL = "http://localhost:3001/api/v1";
 
 const setAuthCookie = (headers) => {
   const authToken = headers["access-token"];
@@ -41,14 +40,6 @@ const getAuthHeaders = () => {
   };
 };
 
-// axios インスタンスの設定
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    Accept: "application/json",
-  },
-});
-
 interface LoginCredentials {
   email: string;
   password: string;
@@ -61,7 +52,7 @@ export const login = async ({ email, password }: LoginCredentials) => {
     params.append("email", email);
     params.append("password", password);
 
-    const response = await api.post("/auth/sign_in", params, {
+    const response = await apiClient.post("/auth/sign_in", params, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -79,7 +70,7 @@ export const login = async ({ email, password }: LoginCredentials) => {
 
 export const logout = async () => {
   try {
-    const response = await api.delete("/auth/sign_out", {
+    const response = await apiClient.delete("/auth/sign_out", {
       headers: getAuthHeaders(),
     });
 
@@ -109,7 +100,7 @@ export const signUp = async (credentials: SignUpCredentials) => {
     params.append("password_confirmation", credentials.password_confirmation);
     params.append("name", credentials.name);
 
-    const response = await api.post("/auth", params, {
+    const response = await apiClient.post("/auth", params, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
