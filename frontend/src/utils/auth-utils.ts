@@ -1,4 +1,4 @@
-import { apiClient } from "@/api/api";
+import { apiClient, apiV1Delete } from "@/api/api";
 import axios from "axios";
 
 const setAuthCookie = (headers) => {
@@ -11,7 +11,7 @@ const setAuthCookie = (headers) => {
   document.cookie = `uid=${uid}; path=/; SameSite=Strict`;
 };
 
-export const getAuthCookie = (name: string) => {
+const getAuthCookie = (name: string) => {
   const cookies = document.cookie.split("; ");
   for (const cookie of cookies) {
     const [cookieName, cookieValue] = cookie.split("=");
@@ -31,8 +31,7 @@ const clearAuthCookies = () => {
   clearCookieValue("uid");
 };
 
-// 認証ヘッダーを取得する関数
-const getAuthHeaders = () => {
+export const getAuthHeaders = () => {
   return {
     "access-token": getAuthCookie("access-token"),
     client: getAuthCookie("client"),
@@ -47,11 +46,11 @@ interface LoginCredentials {
 
 export const login = async ({ email, password }: LoginCredentials) => {
   try {
-    // URLSearchParams を使用して application/x-www-form-urlencoded 形式で送信
     const params = new URLSearchParams();
     params.append("email", email);
     params.append("password", password);
 
+    // response.headers が必要なので、apiV1Post は使わない
     const response = await apiClient.post("/auth/sign_in", params, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -70,9 +69,7 @@ export const login = async ({ email, password }: LoginCredentials) => {
 
 export const logout = async () => {
   try {
-    const response = await apiClient.delete("/auth/sign_out", {
-      headers: getAuthHeaders(),
-    });
+    const response = await apiV1Delete("/auth/sign_out");
 
     clearAuthCookies();
     return response.data;
@@ -93,13 +90,13 @@ interface SignUpCredentials {
 
 export const signUp = async (credentials: SignUpCredentials) => {
   try {
-    // URLSearchParams を使用して application/x-www-form-urlencoded 形式で送信
     const params = new URLSearchParams();
     params.append("email", credentials.email);
     params.append("password", credentials.password);
     params.append("password_confirmation", credentials.password_confirmation);
     params.append("name", credentials.name);
 
+    // response.headers が必要なので、apiV1Post は使わない
     const response = await apiClient.post("/auth", params, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
