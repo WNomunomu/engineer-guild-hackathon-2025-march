@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { kMaxLength } from "buffer";
 
 const API_BASE_URL = "http://localhost:3001/api/v1";
 
@@ -46,7 +45,6 @@ const getAuthHeaders = () => {
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
@@ -58,9 +56,15 @@ interface LoginCredentials {
 
 export const login = async ({ email, password }: LoginCredentials) => {
   try {
-    const response = await api.post("/auth/sign_in", {
-      email,
-      password,
+    // URLSearchParams を使用して application/x-www-form-urlencoded 形式で送信
+    const params = new URLSearchParams();
+    params.append("email", email);
+    params.append("password", password);
+
+    const response = await api.post("/auth/sign_in", params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     });
 
     setAuthCookie(response.headers);
@@ -98,11 +102,17 @@ interface SignUpCredentials {
 
 export const signUp = async (credentials: SignUpCredentials) => {
   try {
-    const response = await api.post("/auth", {
-      email: credentials.email,
-      password: credentials.password,
-      password_confirmation: credentials.password_confirmation,
-      name: credentials.name,
+    // URLSearchParams を使用して application/x-www-form-urlencoded 形式で送信
+    const params = new URLSearchParams();
+    params.append("email", credentials.email);
+    params.append("password", credentials.password);
+    params.append("password_confirmation", credentials.password_confirmation);
+    params.append("name", credentials.name);
+
+    const response = await api.post("/auth", params, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     });
 
     setAuthCookie(response.headers);
