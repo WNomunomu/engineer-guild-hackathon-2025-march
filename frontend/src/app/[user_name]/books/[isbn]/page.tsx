@@ -160,7 +160,7 @@ export default function BookDetail() {
                     <div className="input-group mb-4">
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control form-control-original"
                         value={currentPage}
                         onChange={(e) => setCurrentPage(Number(e.target.value))}
                         min={0}
@@ -171,7 +171,7 @@ export default function BookDetail() {
                     <div className="text-center">
                       <button
                         onClick={handleProgressUpdate}
-                        className="btn btn-primary w-75 py-2"
+                        className="btn btn-original w-75 py-2"
                       >
                         進捗を登録
                       </button>
