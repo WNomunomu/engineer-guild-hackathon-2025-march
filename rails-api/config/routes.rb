@@ -9,10 +9,10 @@ Rails.application.routes.draw do
 
       # ユーザーに紐づくリソース
       namespace :users do
-        resources :books, only: [:index, :create] do
+        resources :books, only: [:index, :create, :destroy, :update] do
           collection do
             delete ':isbn', to: 'books#destroy'
-            # patch ':isbn', to: 'books#update'
+            patch ':isbn', to: 'books#update'
           end
         end
 

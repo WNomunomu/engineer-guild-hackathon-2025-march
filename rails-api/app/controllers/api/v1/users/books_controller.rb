@@ -3,37 +3,87 @@ module Api
     module Users
       class BooksController < ApplicationController
         before_action :authenticate_api_v1_user!
-        # def update
-        #   begin
-        #     book = Book.find_by!(isbn: params[:isbn])
-        #   rescue ActiveRecord::RecordNotFound
-        #     render json: { error: 'Book not found' }, status: :unprocessable_entity
-        #     return
-        #   end
-
-        #   user_book = current_api_v1_user.user_books.find_by(book: book)
-
-        #   if user_book.persisted?
-        #     render json: { message: 'Book already registered' }, status: :unprocessable_entity
-        #   else
-        #     user_book = current_api_v1_user.user_books.create(book: book)
-        #     if user_book.persisted?
-        #       render json: { message: 'Book registered successfully', book: book }, status: :created
-        #     else
-        #       render json: { error: 'Failed to register book' }, status: :unprocessable_entity
-        #     end
-        #   end
-        # end
-
-        def create
-          begin
-            book = Book.find_by!(isbn: params[:isbn])
-          rescue ActiveRecord::RecordNotFound 
-            render json: { error: 'Book not found' }, status: :unprocessable_entity
+        def update
+          book = current_api_v1_user.books.find_by(isbn: params[:isbn])
+          if book.nil?
+            render json: { error: 'Book not found' }, status: 422
             return
           end
 
-          user_book = current_api_v1_user.user_books.create(book: book)
+          # book_category 登録解除
+          book.book_categories.destroy_all
+          if book.book_categories.count != 0 
+            render json: { error: 'failed to update category' }, status: 422
+            return
+          end
+
+          # category 再作成
+          begin
+            category_list = []
+            for category in params[:categories].split(',')
+              category_list.append(Category.find_or_create_by!(category: category))
+            end
+          rescue 
+            render json: { error: 'Failed to update category' }, status: :unprocessable_entity
+            return
+          end
+
+          begin
+            book.update!(total_pages: params[:total_pages])
+          rescue ActiveRecord::RecordNotFound 
+            render json: { error: 'Failed to update book' }, status: :unprocessable_entity
+            return
+          end
+
+          # book_category 作成
+          begin
+            for category in category_list
+              BookCategory.create!(book: book, category: category)
+            end
+          rescue
+            render json: { error: 'Failed to update book_category' }, status: :unprocessable_entity
+            return
+          end
+
+          user_book = current_api_v1_user.user_books.find_by(book: book)
+
+          if user_book.update!(completed: params[:completed])
+            render json: { message: 'Book registered successfully', book: book }, status: :ok
+          else
+            render json: { error: 'Failed to register book' }, status: :unprocessable_entity
+          end
+        end
+
+        def create
+          # category 作成
+          begin
+            category_list = []
+            for category in params[:categories].split(',')
+              category_list.append(Category.find_or_create_by!(category: category))
+            end
+          rescue 
+            render json: { error: 'Failed to create category' }, status: :unprocessable_entity
+            return
+          end
+
+          begin
+            book = Book.create!(isbn: params[:isbn], total_pages: params[:total_pages])
+          rescue ActiveRecord::RecordNotFound 
+            render json: { error: 'Failed to create book' }, status: :unprocessable_entity
+            return
+          end
+
+          # book_category 作成
+          begin
+            for category in category_list
+              BookCategory.create!(book: book, category: category)
+            end
+          rescue
+            render json: { error: 'Failed to create book_category' }, status: :unprocessable_entity
+            return
+          end
+
+          user_book = current_api_v1_user.user_books.create(book: book, completed: params[:completed])
 
           if user_book.persisted?
             render json: { message: 'Book registered successfully', book: book }, status: :created
@@ -51,21 +101,15 @@ module Api
         def destroy
           begin
             book = Book.find_by!(isbn: params[:isbn])
-          rescue ActiveRecord::RecordNotFound 
-            render json: { error: 'Book not found' }, status: 404
+          rescue ActiveRecord::RecordNotFound
+            render json: { error: 'Book not found' }, status: 422
             return
           end
 
-          user_book = current_api_v1_user.user_books.find_by(book: book)
-          if not user_book
-            render json: { error: 'Book not registered' }, status: 422
-            return
-          end
-
-          begin user_book.destroy!
+          begin current_api_v1_user.user_books.find_by(book_id: book.id).destroy!
             render json: { message: 'Book unregistered successfully' }
           rescue
-            render json: { error: 'Failed to unregister book' }, status: 400
+            render json: { error: 'Failed to unregister book' }, status: 422
           end
         end
       end

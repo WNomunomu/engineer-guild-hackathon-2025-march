@@ -3,6 +3,7 @@
 # Table name: user_books
 #
 #  id            :bigint           not null, primary key
+#  completed     :boolean          default(FALSE)
 #  current_pages :integer          default(0)
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null

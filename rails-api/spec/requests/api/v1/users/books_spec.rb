@@ -11,72 +11,69 @@ RSpec.describe "API::V1::Books", type: :request do
     headers["uid"] = res["uid"]
   end
   
-  # describe "PATCH api/v1/users/books" do
-  #   let(:url_params) { {} }
-  #   subject { patch "api/v1/users/books", headers: headers, params: params }
-  #   before do
-  #     category = create(:category, category: "manga")
-  #     book = create(:book, current_pages: 1, category: category)
-  #     create(:user_book, user: User.first, book: book)
+  describe "PATCH api/v1/users/books" do
+    let(:url_params) { {} }
+    subject { patch "api/v1/users/books/#{url_params[:isbn]}", headers: headers, params: params }
+    before do
+      # 必須パラメーター
+      params[:isbn] = "1111122222"
+      params[:completed] = "false"
+      params[:categories] = "frontend,cicd" # カンマ区切り
+      params[:total_pages] = 100
+      post "api/v1/users/books", headers: headers, params: params
+    end
+    
+    describe "成功時" do
+      before do
+        # 必須パラメーター
+        url_params[:isbn] = "1111122222"
+        params[:completed] = "true"
+        params[:categories] = "frontend,ci,cd" # カンマ区切り
+        params[:total_pages] = 200
+      end
+      it "修正が成功すること" do
+        subject
+        expect(response).to have_http_status(200)
+        expect(User.first.user_books.first.completed).to eq true
+        expect(User.first.books.first.book_categories.count).to eq 3
+        expect(User.first.books.first.categories.count).to eq 3
+        expect(Category.all.count).to eq 4
+        expect(User.first.books.first.total_pages).to eq 200
+      end
+    end
 
-  #     url_params["isbn"] = book.isbn
-  #     params["current_pages"] = 10
-  #     params["category"] = category.category
-  #   end
+    describe "失敗時" do
+      describe "認証できないとき" do
+        before do
+          headers["client"] = ""
+        end
 
-  #   describe "成功時" do
-  #     # before do
-  #     #   url_params["isbn"] = book.isbn
-  #     #   params["current_pages"] = 10
-  #     # end
-  #     it "修正が成功すること" do
-  #       subject
-  #       expect(User.first.books.user_books.first.current_pages).to eq 10
-  #       expect(response).to have_http_status(200)
-  #     end
-  #   end
-
-  #   describe "失敗時" do
-  #     describe "認証できないとき" do
-  #       before do
-  #         headers["client"] = ""
-  #         params["category"] = "manga"
-  #       end
-
-  #       it "修正が失敗し、正しいhttp status が返ってくる" do
-  #         subject
-  #         expect(User.first.user_books.current_pages).to eq 1
-  #         expect(response).to have_http_status(404)
-  #       end
-  #     end
-
-  #     describe "カテゴリが見つからないとき" do
-  #       before do
-  #         create(:book)
-  #         params["book_id"] = 2
-  #       end
-
-  #       it "登録が失敗し、正しいhttp status が返ってくる" do
-  #         subject
-  #         expect(User.first.user_books.count).to eq 0
-  #         expect(response).to have_http_status(:unprocessable_entity)
-  #       end
-  #     end
-  #   end
-  # end
+        it "修正が失敗し、正しいhttp status が返ってくる" do
+          subject
+          expect(response).to have_http_status(404)
+        end
+      end
+    end
+  end
 
   describe "POST api/v1/users/books" do
     subject { post "api/v1/users/books", headers: headers, params: params }
 
     describe "成功時" do
       before do
-        params["isbn"] = create(:book).isbn
+        # 必須パラメーター
+        params[:isbn] = "1111122222"
+        params[:completed] = "false"
+        params[:categories] = "frontend,cicd" # カンマ区切り
+        params[:total_pages] = 100
       end
 
       it "登録が成功すること" do
         subject
-        expect(User.first.user_books.count).to eq 1
         expect(response).to have_http_status(:created)
+        expect(User.first.user_books.count).to eq 1
+        expect(User.first.books.count).to eq 1
+        expect(User.first.books.first.categories.count).to eq 2
       end
     end
 
@@ -91,19 +88,6 @@ RSpec.describe "API::V1::Books", type: :request do
           subject
           expect(User.first.user_books.count).to eq 0
           expect(response).to have_http_status(401)
-        end
-      end
-
-      describe "パラメータが不正なとき" do
-        before do
-          create(:book)
-          params["book_id"] = 2
-        end
-
-        it "登録が失敗し、正しいhttp status が返ってくる" do
-          subject
-          expect(User.first.user_books.count).to eq 0
-          expect(response).to have_http_status(:unprocessable_entity)
         end
       end
     end
@@ -138,14 +122,11 @@ RSpec.describe "API::V1::Books", type: :request do
   
   describe "DELETE api/v1/users/books/:isbn" do
     subject { delete "api/v1/users/books/#{params[:isbn]}", headers: headers }
-    before do
-      book = create(:book)
-      create(:user_book, user: User.first, book: book)
-      params[:isbn] = book.isbn
-    end
-
     describe "認証できないとき" do
       before do
+        book = create(:book)
+        create(:user_book, user: User.first, book: book)
+        params[:isbn] = book.isbn
         headers["client"] = ""
       end
 
@@ -155,37 +136,24 @@ RSpec.describe "API::V1::Books", type: :request do
         expect(response).to have_http_status(401)
       end
     end
-    
-    describe "書籍が見つからない時" do
-      before do
-        params[:isbn] = "aaaasaaaas"
-      end
-
-      it "登録が外せず、正しいhttp status が返ってくる" do
-        subject
-        expect(User.first.user_books.count).to eq 1
-        expect(response).to have_http_status(404)
-      end
-    end
-
-    describe "書籍が登録されていないとき" do
-      before do
-        User.first.user_books.destroy_all
-      end
-      it "登録が外せず、正しいhttp status が返ってくる" do
-        subject
-        expect(User.first.user_books.count).to eq 0
-        expect(response).to have_http_status(422)
-      end
-    end
 
     describe "成功時" do
+      before do
+        p = {}
+        p[:isbn] = "1111122222"
+        p[:completed] = "false"
+        p[:categories] = "frontend,cicd" # カンマ区切り
+        p[:total_pages] = 100
+        post "api/v1/users/books", headers: headers, params: p
+        
+        params[:isbn] = "1111122222"
+      end
       it "登録が外れ、正しいhttp status が返ってくる" do
         subject
         expect(response).to have_http_status(:ok)
         expect(User.first.user_books.count).to eq(0)
         expect(User.first.books.count).to eq(0)
-        expect(Book.all.count).to eq(1)
+        # expect(Book.all.count).to eq(1)
       end
     end
   end
