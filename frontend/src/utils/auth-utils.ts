@@ -1,8 +1,8 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 const API_BASE_URL = "http://localhost:3001/api/v1";
 
-const setAuthCookie = (headers: any) => {
+const setAuthCookie = (headers) => {
   const authToken = headers["access-token"];
   const client = headers["client"];
   const uid = headers["uid"];
