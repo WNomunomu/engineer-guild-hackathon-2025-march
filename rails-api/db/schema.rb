@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_24_102030) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_01_105648) do
   create_table "book_categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "book_id", null: false
     t.bigint "category_id", null: false
@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_102030) do
     t.integer "current_pages", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "completed", default: false
     t.index ["book_id"], name: "index_user_books_on_book_id"
     t.index ["user_id"], name: "index_user_books_on_user_id"
   end
