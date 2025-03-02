@@ -28,13 +28,6 @@ module Api
             return
           end
 
-          begin
-            book.update!(total_pages: params[:total_pages])
-          rescue ActiveRecord::RecordNotFound 
-            render json: { error: 'Failed to update book' }, status: :unprocessable_entity
-            return
-          end
-
           # book_category 作成
           begin
             for category in category_list
@@ -45,9 +38,8 @@ module Api
             return
           end
 
-          user_book = current_api_v1_user.user_books.find_by(book: book)
-
-          if user_book.update!(completed: params[:completed])
+          # 本更新
+          if book.update!(total_pages: params[:total_pages], completed: params[:completed])
             render json: { message: 'Book registered successfully', book: book }, status: :ok
           else
             render json: { error: 'Failed to register book' }, status: :unprocessable_entity
@@ -55,6 +47,14 @@ module Api
         end
 
         def create
+          # 本作成
+          begin
+            book = Book.create!(isbn: params[:isbn], total_pages: params[:total_pages], completed: params[:completed], user: current_api_v1_user)
+          rescue ActiveRecord::RecordNotFound 
+            render json: { error: 'Failed to create book' }, status: :unprocessable_entity
+            return
+          end
+
           # category 作成
           begin
             category_list = []
@@ -63,13 +63,6 @@ module Api
             end
           rescue 
             render json: { error: 'Failed to create category' }, status: :unprocessable_entity
-            return
-          end
-
-          begin
-            book = Book.create!(isbn: params[:isbn], total_pages: params[:total_pages])
-          rescue ActiveRecord::RecordNotFound 
-            render json: { error: 'Failed to create book' }, status: :unprocessable_entity
             return
           end
 
@@ -83,13 +76,7 @@ module Api
             return
           end
 
-          user_book = current_api_v1_user.user_books.create(book: book, completed: params[:completed])
-
-          if user_book.persisted?
-            render json: { message: 'Book registered successfully', book: book }, status: :created
-          else
-            render json: { error: 'Failed to register book' }, status: :unprocessable_entity
-          end
+          render json: { message: 'Book registered successfully', book: book }, status: :created
         end
 
         def index
@@ -99,18 +86,17 @@ module Api
         end
 
         def destroy
+          book = Book.find_by!(isbn: params[:isbn])
           begin
-            book = Book.find_by!(isbn: params[:isbn])
+            book.destroy!
           rescue ActiveRecord::RecordNotFound
             render json: { error: 'Book not found' }, status: 422
             return
-          end
-
-          begin current_api_v1_user.user_books.find_by(book_id: book.id).destroy!
-            render json: { message: 'Book unregistered successfully' }
           rescue
             render json: { error: 'Failed to unregister book' }, status: 422
           end
+
+          render json: { message: 'Book deleted successfully', book: book }, status: :ok
         end
       end
     end
