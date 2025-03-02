@@ -47,7 +47,7 @@ export default function SignUpForm() {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="form-control form-original"
+              className="form-control form-control-original"
               required
             />
           </div>
@@ -60,7 +60,7 @@ export default function SignUpForm() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-control form-original"
+              className="form-control form-control-original"
               required
             />
           </div>
@@ -73,7 +73,7 @@ export default function SignUpForm() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="form-control form-original"
+              className="form-control form-control-original"
               required
             />
           </div>
@@ -86,7 +86,7 @@ export default function SignUpForm() {
               id="passwordConfirmation"
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
-              className="form-control form-original"
+              className="form-control form-control-original"
               required
             />
           </div>

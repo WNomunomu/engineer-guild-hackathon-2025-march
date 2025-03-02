@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
   validates :email, presence: true, uniqueness: true
 
   has_many :user_books
-  has_many :books, through: :user_books
-  has_many :reading_logs
-  has_many :exp_logs
+  has_many :books, dependent: :destroy
+  has_many :reading_logs, dependent: :destroy
+  has_many :exp_logs, dependent: :destroy
 end

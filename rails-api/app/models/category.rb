@@ -12,7 +12,7 @@
 #  index_categories_on_category  (category) UNIQUE
 #
 class Category < ApplicationRecord
-  has_many :book_categories
+  has_many :book_categories, dependent: :destroy
   has_many :books, through: :book_categories
   has_many :exp_logs
 

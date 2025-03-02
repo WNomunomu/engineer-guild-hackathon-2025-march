@@ -42,7 +42,7 @@ export function LoginForm() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-control form-original"
+              className="form-control form-control-original"
               required
             />
           </div>
@@ -55,7 +55,7 @@ export function LoginForm() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="form-control form-original"
+              className="form-control form-control-original"
               required
             />
           </div>

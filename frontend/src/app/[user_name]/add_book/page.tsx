@@ -250,13 +250,13 @@ export default function AddBook() {
             <input
               type="text"
               id="isbn"
-              className="form-control form-original"
+              className="form-control form-control-original"
               value={isbn}
               onChange={handleIsbnChange}
               placeholder="ISBN番号を入力"
             />
             <button
-              className="btn btn-primary mb-3 mt-3"
+              className="btn btn-original mb-3 mt-3"
               onClick={handleSearchBook}
               disabled={loading}
             >
