@@ -16,7 +16,12 @@ Rails.application.routes.draw do
           end
         end
 
-        post 'reading_logs', to: 'reading_logs#create'
+        resources :reading_logs, only: [:index, :create] do
+          collection do
+            get 'retrieve-by-date', to: 'reading_logs#retrieve_by_date'
+          end
+        end
+
         get 'reading_logs', to: 'reading_logs#index'
 
         get 'exp_logs', to: 'exp_logs#index'

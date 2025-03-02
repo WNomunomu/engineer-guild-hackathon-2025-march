@@ -59,4 +59,23 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
       end
     end
   end
+
+  describe "GET /api/v1/users/reading_logs/retrieve-by-date" do
+    describe "成功時" do
+      before do
+        user = User.find_by(email: "a@a.com")
+        book = create(:book)
+        user.reading_logs.create!(pages_read: 10, read_at: Date.today, book: book)
+        user.reading_logs.create!(pages_read: 20, read_at: Date.today - 1, book: book)
+        user.reading_logs.create!(pages_read: 30, read_at: Date.today - 1, book: create(:book))
+        user.reading_logs.create!(pages_read: 20, read_at: Date.today - 50, book: book)
+      end
+
+      it "指定した期間の読書履歴が取得できること" do
+        get "api/v1/users/reading_logs/retrieve-by-date", headers: header, params: { from_date: Date.today - 2, to_date: Date.today }
+        expect(response).to have_http_status(200)
+        expect(JSON.parse(response.body)).to eq([0,50,10])
+      end
+    end
+  end
 end
