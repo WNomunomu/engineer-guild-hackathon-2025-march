@@ -3,23 +3,25 @@ require 'rails_helper'
 RSpec.describe "Api::V1::User::ExpLogs", type: :request do
   describe "GET /api/v1/user/exp_logs" do
     let(:header) { {} }
+    let(:user) { "" }
     describe "成功時" do
       before do
         res = register_and_sign_in("a", "a@a.com", "password")
         header["client"] = res["client"]
         header["access-token"] = res["access-token"]
         header["uid"] = res["uid"]
+        user = User.find_by(email: "a@a.com")
       end
       let(:user) { User.find_by(email: "a@a.com") }
       let(:category1) { create :category }
       let(:category2) { create :category }
       let(:book1) do
-        book = create(:book)
+        book = create(:book, user: User.find_by(email: "a@a.com"))
         book.categories << category1
         book
       end
       let(:book2) do
-        book = create(:book)
+        book = create(:book, user: User.find_by(email: "a@a.com"))
         book.categories << category2
         book
       end

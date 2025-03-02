@@ -11,7 +11,7 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
   describe "GET /api/v1/users/reading_logs" do
     describe "成功時" do
       before do
-        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: Date.today, book: create(:book))
+        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: Date.today, book: create(:book, user: User.find_by(email: "a@a.com")))
       end
       it "読書履歴が取得できること" do
         get "api/v1/users/reading_logs", headers: header
@@ -23,7 +23,7 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
     describe "ログインしていない場合" do
       before do
         header["access-token"] = ""
-        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: Date.today, book: create(:book))
+        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: Date.today, book: create(:book, user: User.find_by(email: "a@a.com")))
       end
       it "401レスポンスが返ってくる" do
         get "api/v1/users/reading_logs", headers: header
@@ -35,7 +35,7 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
   describe "POST /api/v1/users/reading_logs" do
     describe "成功時" do
       it "読書履歴が登録できること" do
-        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book).isbn, read_at: Date.today, pages_read: 10 }
+        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: Date.today, pages_read: 10 }
         expect(response).to have_http_status(201)
         expect(User.find_by(email: "a@a.com").reading_logs.count).to eq(1)
       end
@@ -46,14 +46,14 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
         header["access-token"] = ""
       end
       it "401レスポンスが返ってくる" do
-        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book).isbn, read_at: Date.today, pages_read: 10 }
+        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: Date.today, pages_read: 10 }
         expect(response).to have_http_status(401)
       end
     end
 
     describe "パラメーターが正しくないとき" do
       it "読書履歴が登録できないこと" do
-        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book).isbn, read_at: Date.today, pages_read: -1 }
+        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: Date.today, pages_read: -1 }
         expect(response).to have_http_status(422)
         expect(User.find_by(email: "a@a.com").reading_logs.count).to eq(0)
       end

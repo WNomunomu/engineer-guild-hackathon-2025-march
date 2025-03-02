@@ -18,8 +18,8 @@ RSpec.describe "API::V1::Books", type: :request do
       # 必須パラメーター
       params[:isbn] = "1111122222"
       params[:completed] = "false"
-      params[:categories] = "frontend,cicd" # カンマ区切り
       params[:total_pages] = 100
+      params[:categories] = "frontend,cicd" # カンマ区切り
       post "api/v1/users/books", headers: headers, params: params
     end
     
@@ -28,13 +28,13 @@ RSpec.describe "API::V1::Books", type: :request do
         # 必須パラメーター
         url_params[:isbn] = "1111122222"
         params[:completed] = "true"
-        params[:categories] = "frontend,ci,cd" # カンマ区切り
         params[:total_pages] = 200
+        params[:categories] = "frontend,ci,cd" # カンマ区切り
       end
       it "修正が成功すること" do
         subject
         expect(response).to have_http_status(200)
-        expect(User.first.user_books.first.completed).to eq true
+        expect(User.first.books.first.completed).to eq true
         expect(User.first.books.first.book_categories.count).to eq 3
         expect(User.first.books.first.categories.count).to eq 3
         expect(Category.all.count).to eq 4
@@ -64,14 +64,13 @@ RSpec.describe "API::V1::Books", type: :request do
         # 必須パラメーター
         params[:isbn] = "1111122222"
         params[:completed] = "false"
-        params[:categories] = "frontend,cicd" # カンマ区切り
         params[:total_pages] = 100
+        params[:categories] = "frontend,cicd" # カンマ区切り
       end
 
       it "登録が成功すること" do
         subject
         expect(response).to have_http_status(:created)
-        expect(User.first.user_books.count).to eq 1
         expect(User.first.books.count).to eq 1
         expect(User.first.books.first.categories.count).to eq 2
       end
@@ -81,12 +80,11 @@ RSpec.describe "API::V1::Books", type: :request do
       describe "認証できないとき" do
         before do
           headers["client"] = ""
-          params["book_id"] = create(:book).id
         end
 
         it "登録が失敗し、正しいhttp status が返ってくる" do
           subject
-          expect(User.first.user_books.count).to eq 0
+          expect(User.first.books.count).to eq 0
           expect(response).to have_http_status(401)
         end
       end
@@ -103,14 +101,14 @@ RSpec.describe "API::V1::Books", type: :request do
 
       it "登録が失敗し、正しいhttp status が返ってくる" do
         subject
-        expect(User.first.user_books.count).to eq 0
+        expect(User.first.books.count).to eq 0
         expect(response).to have_http_status(401)
       end
     end
 
     describe "成功時" do
       before do
-        post "api/v1/users/books", headers: headers, params: {:isbn => create(:book).isbn}
+        post "api/v1/users/books", headers: headers, params: {:isbn => create(:book, user: User.find_by(email: "a@a.com")).isbn}
       end
       it "returns a list of books" do
         subject
@@ -124,15 +122,14 @@ RSpec.describe "API::V1::Books", type: :request do
     subject { delete "api/v1/users/books/#{params[:isbn]}", headers: headers }
     describe "認証できないとき" do
       before do
-        book = create(:book)
-        create(:user_book, user: User.first, book: book)
+        book = create(:book, user: User.first)
         params[:isbn] = book.isbn
         headers["client"] = ""
       end
 
       it "登録が外せず、正しいhttp status が返ってくる" do
         subject
-        expect(User.first.user_books.count).to eq 1
+        expect(User.first.books.count).to eq 1
         expect(response).to have_http_status(401)
       end
     end
@@ -142,8 +139,8 @@ RSpec.describe "API::V1::Books", type: :request do
         p = {}
         p[:isbn] = "1111122222"
         p[:completed] = "false"
-        p[:categories] = "frontend,cicd" # カンマ区切り
         p[:total_pages] = 100
+        p[:categories] = "frontend,cicd" # カンマ区切り
         post "api/v1/users/books", headers: headers, params: p
         
         params[:isbn] = "1111122222"
@@ -151,9 +148,8 @@ RSpec.describe "API::V1::Books", type: :request do
       it "登録が外れ、正しいhttp status が返ってくる" do
         subject
         expect(response).to have_http_status(:ok)
-        expect(User.first.user_books.count).to eq(0)
         expect(User.first.books.count).to eq(0)
-        # expect(Book.all.count).to eq(1)
+        expect(User.first.books.count).to eq(0)
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_01_105648) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_02_080818) do
   create_table "book_categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "book_id", null: false
     t.bigint "category_id", null: false
@@ -28,6 +28,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_105648) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "isbn"
+    t.bigint "user_id", null: false
+    t.boolean "completed", default: false
+    t.integer "current_pages", default: 0
+    t.index ["user_id"], name: "index_books_on_user_id"
   end
 
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -97,6 +101,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_01_105648) do
 
   add_foreign_key "book_categories", "books"
   add_foreign_key "book_categories", "categories"
+  add_foreign_key "books", "users"
   add_foreign_key "exp_logs", "categories"
   add_foreign_key "exp_logs", "users"
   add_foreign_key "reading_logs", "books"

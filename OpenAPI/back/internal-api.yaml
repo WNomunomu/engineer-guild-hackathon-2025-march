@@ -7,11 +7,7 @@ servers:
   - url: https://internal-api.example.com
     description: 内部向けAPIサーバ
 paths:
-  /api/v1/books: 
-    $ref: './api/v1/books.yaml#/get_books'
-  /api/v1/books/create_book: 
-    $ref: './api/v1/books.yaml#/create_book'
   /api/v1/users/{user_id}/books:
-    $ref: './api/v1/users/books.yaml#/get_books'
+    $ref: "./api/v1/users/books.yaml#/get_books"
   /api/v1/users/{user_id}/books/add_book:
-    $ref: './api/v1/users/books.yaml#/add_book'
+    $ref: "./api/v1/users/books.yaml#/add_book"
