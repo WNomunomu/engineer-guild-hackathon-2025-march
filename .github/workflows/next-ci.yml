@@ -1,7 +1,7 @@
 name: CIForNext
 on: pull_request
 jobs:
-  textlint:
+  build_and_textlint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
