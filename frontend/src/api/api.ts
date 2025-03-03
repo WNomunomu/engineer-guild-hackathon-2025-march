@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getAuthHeaders } from "@/utils/auth-utils";
 
 const API_BASE_URL = "http://localhost:3001/api/v1";
@@ -17,7 +17,12 @@ export const apiV1Get = async (url: string) => {
     const response = await apiClient.get(url, { headers: config });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.errors);
+    // AxiosError 型を指定
+    if (error instanceof AxiosError) {
+      throw new Error(error.response?.data?.errors);
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 
@@ -27,7 +32,12 @@ export const apiV1Post = async (url: string, data = {}) => {
     const response = await apiClient.post(url, data, { headers: config });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.errors);
+    // AxiosError 型を指定
+    if (error instanceof AxiosError) {
+      throw new Error(error.response?.data?.errors);
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 
@@ -37,7 +47,12 @@ export const apiV1Put = async (url: string, data = {}) => {
     const response = await apiClient.put(url, data, { headers: config });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.errors);
+    // AxiosError 型を指定
+    if (error instanceof AxiosError) {
+      throw new Error(error.response?.data?.errors);
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 
@@ -47,6 +62,11 @@ export const apiV1Delete = async (url: string) => {
     const response = await apiClient.delete(url, { headers: config });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.errors);
+    // AxiosError 型を指定
+    if (error instanceof AxiosError) {
+      throw new Error(error.response?.data?.errors);
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
   }
 };

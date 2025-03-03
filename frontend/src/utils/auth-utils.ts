@@ -1,7 +1,8 @@
 import { apiClient, apiV1Delete } from "@/api/api";
 import axios from "axios";
 
-const setAuthCookie = (headers) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const setAuthCookie = (headers: any) => {
   const authToken = headers["access-token"];
   const client = headers["client"];
   const uid = headers["uid"];
