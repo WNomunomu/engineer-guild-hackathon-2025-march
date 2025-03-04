@@ -1,4 +1,4 @@
-name: Textlintfornext
+name: CIForNext
 on: pull_request
 jobs:
   textlint:
@@ -19,4 +19,7 @@ jobs:
         working-directory: ./frontend
       - name: lint
         run: yarn lint
+        working-directory: ./frontend
+      - name: Build
+        run: yarn build
         working-directory: ./frontend
