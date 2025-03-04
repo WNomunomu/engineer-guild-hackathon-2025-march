@@ -1,4 +1,6 @@
 import { ContributionCalendar } from "react-contribution-calendar";
+import { useState, useEffect } from "react";
+import { apiV1Post } from "@/api/api";
 
 const contributionData = [
   {
@@ -15,17 +17,26 @@ const contributionData = [
   },
 ];
 
-export const ContributionCalenderCard = () => {
+export const ContributionCalenderCard = async() => {
+  const [startDate, setStartDate] = useState("2025-04-04");
+  const [endDate, setEndDate] = useState("2026-04-04");
+  const [conData, setConData] = useState({});
+
+  const response = await apiV1Post("/users/reading_logs/retrieve-by-date", {
+    startDate: startDate,
+    endDate: endDate
+  })
+
   return (
     <div className="card">
       <div className="card-body">
         <div className="d-flex row">
           <div className="col-11">
             <ContributionCalendar
-              data={contributionData}
+              data={conData}
               dateOptions={{
-                start: "2023-04-04",
-                end: "2024-04-04",
+                start: startDate,
+                end: endDate,
                 // daysOfTheWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                 startsOnSunday: true,
                 includeBoundary: true,

@@ -26,13 +26,17 @@ module Api
         end
 
         def retrieve_by_date
-          logs = current_api_v1_user.reading_logs.where(read_at: params[:from_date].to_date..params[:to_date].to_date)
-          retval = []
-          (params[:from_date].to_date..params[:to_date].to_date).each do |date|
-            retval.push(0)
-            for log in logs.select { |log| log.read_at == date }
-              retval[-1] += log.pages_read
-            end
+          logs = current_api_v1_user.reading_logs.where(read_at: params[:startDate].to_date..params[:endDate].to_date).group(:read_at).pluck(
+            'categories.id',
+            'categories.category',
+            Arel.sql('COALESCE(SUM(reading_logs.pages_read), 0)')
+          )
+          binding.pry
+          retval = logs.group_by{ |log| log.read_at }.map do |log|
+            {
+              read_at: log.read_at,
+              level: log.pages_read * AppConstants::EXP_RATE_PER_READ_PAGE,
+            }
           end
           render json: retval
         end

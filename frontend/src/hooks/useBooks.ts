@@ -1,8 +1,10 @@
 import useSWR from "swr";
-import { fetcher } from "@/api/api";
+import { apiV1Get } from "@/api/api";
 
 export type Book = {
   id: number;
+  isbn: string;
+  completed: boolean;
   title: string;
   author: string;
   total_pages: number;
@@ -11,7 +13,7 @@ export type Book = {
 };
 
 export const useBooks = () => {
-  const { data, error, isLoading } = useSWR<Book[]>("/books", fetcher);
+  const { data, error, isLoading } = useSWR<Book[]>("/users/books", apiV1Get);
 
   return {
     books: data,

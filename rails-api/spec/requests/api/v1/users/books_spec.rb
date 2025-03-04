@@ -17,7 +17,6 @@ RSpec.describe "API::V1::Books", type: :request do
     before do
       # 必須パラメーター
       params[:isbn] = "1111122222"
-      params[:completed] = "false"
       params[:total_pages] = 100
       params[:categories] = "frontend,cicd" # カンマ区切り
       post "api/v1/users/books", headers: headers, params: params
@@ -63,7 +62,6 @@ RSpec.describe "API::V1::Books", type: :request do
       before do
         # 必須パラメーター
         params[:isbn] = "1111122222"
-        params[:completed] = "false"
         params[:total_pages] = 100
         params[:categories] = "frontend,cicd" # カンマ区切り
       end
