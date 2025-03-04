@@ -75,7 +75,7 @@ export default function AddBook() {
   const [bookData, setBookData] = useState<BookData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { books, _isLoading, _isError } = useBooks();
+  const { books, isLoading, isError } = useBooks();
   console.log(books);
 
   const [isAnimationComplete, setIsAnimationComplete] =
