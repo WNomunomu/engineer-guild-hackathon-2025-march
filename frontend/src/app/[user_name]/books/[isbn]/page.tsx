@@ -39,6 +39,7 @@ export default function BookDetail() {
         const res = await fetch(
           `https://www.googleapis.com/books/v1/volumes?q=${isbn}+isbn`
         );
+        console.log("google api called");
         const data = await res.json();
 
         if (data.items) {

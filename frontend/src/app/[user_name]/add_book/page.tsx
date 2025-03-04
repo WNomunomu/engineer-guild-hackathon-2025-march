@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { BookStack } from "@/components/BookStackCard";
+import { apiV1Post } from "@/api/api";
+import { useBooks } from "@/hooks/useBooks";
 
 // Google Books API のレスポンスの型を定義
 interface VolumeInfo {
@@ -39,39 +43,40 @@ interface BookDataForStack {
   totalPage: number;
 }
 
-const mockUnreadBooks = [
-  {
-    title: "入門 コンピュータ科学 ITを支える技術と理論の基礎知識",
-    category: "Computer Science",
-    totalPage: 300,
-  },
-  {
-    title: "Kubernetes CI/CDパイプラインの実装",
-    category: "Infrastructure",
-    totalPage: 350,
-  },
-  { title: "Go言語による並行処理", category: "Backend", totalPage: 400 },
-  { title: "nginx実践入門", category: "Infrastructure", totalPage: 280 },
-  { title: "マスタリングTCP/IP―入門編", category: "Network", totalPage: 350 },
-  {
-    title: "本気で学ぶ Linux実践入門",
-    category: "Infrastructure",
-    totalPage: 500,
-  },
-  { title: "GCPの教科書", category: "Cloud", totalPage: 450 },
-  { title: "入門kubernetes", category: "Infrastructure", totalPage: 320 },
-  {
-    title: "達人が教えるWebパフォーマンスチューニング",
-    category: "Web",
-    totalPage: 370,
-  },
-];
+// const mockUnreadBooks = [
+//   {
+//     title: "入門 コンピュータ科学 ITを支える技術と理論の基礎知識",
+//     category: "Computer Science",
+//     totalPage: 300,
+//   },
+//   {
+//     title: "Kubernetes CI/CDパイプラインの実装",
+//     category: "Infrastructure",
+//     totalPage: 350,
+//   },
+//   { title: "Go言語による並行処理", category: "Backend", totalPage: 400 },
+//   { title: "nginx実践入門", category: "Infrastructure", totalPage: 280 },
+//   { title: "マスタリングTCP/IP―入門編", category: "Network", totalPage: 350 },
+//   {
+//     title: "本気で学ぶ Linux実践入門",
+//     category: "Infrastructure",
+//     totalPage: 500,
+//   },
+//   { title: "GCPの教科書", category: "Cloud", totalPage: 450 },
+//   { title: "入門kubernetes", category: "Infrastructure", totalPage: 320 },
+//   {
+//     title: "達人が教えるWebパフォーマンスチューニング",
+//     category: "Web",
+//     totalPage: 370,
+//   },
+// ];
 
 export default function AddBook() {
   const [isbn, setIsbn] = useState<string>("");
   const [bookData, setBookData] = useState<BookData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const { books, isLoading, isError } = useBooks();
 
   const [isAnimationComplete, setIsAnimationComplete] =
     useState<boolean>(false);
@@ -81,7 +86,7 @@ export default function AddBook() {
     []
   );
   const [bookDataArrayUnread, setBookDataArrayUnread] = useState<
-    BookDataForStack[]
+    any[] | undefined
   >([]);
 
   // 📌 それぞれのオフセットを管理
@@ -92,7 +97,7 @@ export default function AddBook() {
     (sum, book) => sum + book.totalPage,
     0
   );
-  const totalPagesUnread = bookDataArrayUnread.reduce(
+  const totalPagesUnread = (bookDataArrayUnread || []).reduce(
     (sum, book) => sum + book.totalPage,
     0
   );
@@ -126,6 +131,7 @@ export default function AddBook() {
       const res = await fetch(
         `https://www.googleapis.com/books/v1/volumes?q=${sanitizedIsbn}+isbn`
       );
+      console.log("google api called");
       const data = await res.json();
 
       if (data.items && data.items.length > 0) {
@@ -159,7 +165,7 @@ export default function AddBook() {
     }
   };
 
-  const handleAddBook = (book: BookData) => {
+  const handleAddBook = async (book: BookData) => {
     console.log("本を追加する処理:", book);
 
     // `BookStack` に渡す形式に変換
@@ -169,10 +175,22 @@ export default function AddBook() {
       totalPage: book.summary.pages ? parseInt(book.summary.pages, 10) : 200, // デフォルト200ページ
     };
 
-    console.log(formattedBook.totalPage);
+    console.log(formattedBook);
+
+    // TODO: エラーハンドリング
+    const response = await apiV1Post("/users/books", {
+      title: book.summary.title,
+      total_pages: book.summary.pages ? parseInt(book.summary.pages, 10) : 200,
+      isbn: book.isbn,
+      author: book.summary.author,
+      categories: "a,ss",
+    });
+
+    console.log(response);
 
     setBookDataArrayNew((prevBooks) => {
       const updatedBooks = [formattedBook, ...prevBooks];
+      console.log(updatedBooks);
       setOffsetsNew(
         updatedBooks.map(() => Math.floor(Math.random() * 50) - 20)
       );
@@ -180,10 +198,11 @@ export default function AddBook() {
     });
 
     // 未読本のリスト（固定データ）
-    setBookDataArrayUnread((prevBooks) => {
-      const updatedBooks = [...prevBooks, ...mockUnreadBooks];
+    setBookDataArrayUnread(() => {
+      // const updatedBooks = [...prevBooks, ...mockUnreadBooks];
+      const updatedBooks = books;
       setOffsetsUnread(
-        updatedBooks.map(() => Math.floor(Math.random() * 50) - 20)
+        updatedBooks?.map(() => Math.floor(Math.random() * 50) - 20) || []
       );
       return updatedBooks;
     });

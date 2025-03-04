@@ -16,7 +16,7 @@ export const BookStack = ({
   bookDataArray,
   offsets,
 }: {
-  bookDataArray: BookData[];
+  bookDataArray: BookData[] | undefined;
   offsets: number[];
 }) => {
   const colorVariants = ["#1e7a63", "#2da882", "#39b894"];
@@ -26,7 +26,7 @@ export const BookStack = ({
       className="d-flex flex-column align-items-center overflow-auto p-2"
       style={{ maxHeight: "350px" }}
     >
-      {bookDataArray.map((bookData, index) => (
+      {(bookDataArray || []).map((bookData, index) => (
         <div
           key={index}
           className="w-75 py-2 px-3 text-white text-center rounded-3 shadow-sm fs-6 overflow-hidden text-truncate"

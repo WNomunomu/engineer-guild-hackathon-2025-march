@@ -32,14 +32,12 @@ RSpec.describe "Api::V1::User::ExpLogs", type: :request do
       let(:expected_body) do
         [
           {
-            "category_id"   => category1.id,
-            "category_name" => category1.category,
-            "exp"    => (300 * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
+            "category" => category1.category,
+            "level"    => (300 * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
           },
           {
-            "category_id"   => category2.id,
-            "category_name" => category2.category,
-            "exp"    => (200 * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
+            "category" => category2.category,
+            "level"    => (200 * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
           },
         ]
       end

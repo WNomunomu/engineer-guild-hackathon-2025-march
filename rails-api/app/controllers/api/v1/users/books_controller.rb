@@ -39,7 +39,7 @@ module Api
           end
 
           # 本更新
-          if book.update!(total_pages: params[:total_pages], completed: params[:completed])
+          if book.update!(total_pages: params[:total_pages], completed: params[:completed], title: params[:title], author: params[:author])
             render json: { message: 'Book registered successfully', book: book }, status: :ok
           else
             render json: { error: 'Failed to register book' }, status: :unprocessable_entity
@@ -49,7 +49,7 @@ module Api
         def create
           # 本作成
           begin
-            book = Book.create!(isbn: params[:isbn], total_pages: params[:total_pages], completed: params[:completed], user: current_api_v1_user)
+            book = Book.create!(isbn: params[:isbn], total_pages: params[:total_pages], completed: params[:completed], user: current_api_v1_user, title: params[:title], author: params[:author])
           rescue ActiveRecord::RecordNotFound 
             render json: { error: 'Failed to create book' }, status: :unprocessable_entity
             return
