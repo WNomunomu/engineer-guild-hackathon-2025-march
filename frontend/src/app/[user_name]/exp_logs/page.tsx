@@ -84,7 +84,7 @@ export default function ExpLogs() {
     ];
     setAlreadyReadBooks(updatedBooks);
 
-    const updatedLevelData = levelData.map((data) =>
+    const updatedLevelData = (levelData || []).map((data) =>
       data.category === book.category
         ? {
             ...data,
@@ -157,7 +157,7 @@ export default function ExpLogs() {
         </div>
       )}
       <div className="mx-auto mt-4 w-75">
-        <LevelCard LevelInfoArray={levelData} />
+        <LevelCard LevelInfoArray={levelData || []} />
       </div>
     </>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
@@ -86,7 +87,7 @@ export default function AddBook() {
     []
   );
   const [bookDataArrayUnread, setBookDataArrayUnread] = useState<
-    BookDataForStack[]
+    any[] | undefined
   >([]);
 
   // 📌 それぞれのオフセットを管理
@@ -97,7 +98,7 @@ export default function AddBook() {
     (sum, book) => sum + book.totalPage,
     0
   );
-  const totalPagesUnread = bookDataArrayUnread.reduce(
+  const totalPagesUnread = (bookDataArrayUnread || []).reduce(
     (sum, book) => sum + book.totalPage,
     0
   );
@@ -131,6 +132,7 @@ export default function AddBook() {
       const res = await fetch(
         `https://www.googleapis.com/books/v1/volumes?q=${sanitizedIsbn}+isbn`
       );
+      console.log("google api called");
       const data = await res.json();
 
       if (data.items && data.items.length > 0) {
@@ -197,11 +199,11 @@ export default function AddBook() {
     });
 
     // 未読本のリスト（固定データ）
-    setBookDataArrayUnread((prevBooks) => {
+    setBookDataArrayUnread(() => {
       // const updatedBooks = [...prevBooks, ...mockUnreadBooks];
       const updatedBooks = books;
       setOffsetsUnread(
-        updatedBooks.map(() => Math.floor(Math.random() * 50) - 20)
+        updatedBooks?.map(() => Math.floor(Math.random() * 50) - 20) || []
       );
       return updatedBooks;
     });

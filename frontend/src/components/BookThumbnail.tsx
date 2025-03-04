@@ -21,6 +21,7 @@ export const BookThumbnail = ({ isbn }: BookThumbnailProps) => {
         const res = await fetch(
           `https://www.googleapis.com/books/v1/volumes?q=${isbn}+isbn`
         );
+        console.log("google api called");
         const data = await res.json();
         const googleCover = data.items?.[0]?.volumeInfo?.imageLinks?.thumbnail;
 
