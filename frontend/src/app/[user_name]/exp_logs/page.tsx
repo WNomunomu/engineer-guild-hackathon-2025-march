@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { LevelCard } from "@/components/LevelCard";
 import { useState, useEffect } from "react";
 import { apiV1Get } from "@/api/api";
+import { useExpLogs } from "@/hooks/useExpLogs";
+
 
 const mockUnreadBooks = [
   {
@@ -51,19 +54,8 @@ export default function ExpLogs() {
   const [readPages, setReadPages] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const exp_log = await apiV1Get("/users/exp_logs");
-      if (exp_log.length === 0) {
-        setLevelData(undefined);
-      } else {
-        setLevelData(exp_log);
-      }
-      console.log(exp_log);
-    };
-    fetchData();
-  }, []);
+  const { expLogs, isLoading, isError } = useExpLogs();
+  setLevelData(expLogs)
 
   const [alreadyReadBooks, setAlreadyReadBooks] = useState<
     { title: string; category: string; totalPage: number; readPages: number }[]

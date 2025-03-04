@@ -2,6 +2,7 @@
 import { ContributionCalendar } from "react-contribution-calendar";
 import { useState, useEffect } from "react";
 import { apiV1Get } from "@/api/api";
+import { useReadingLogsBetweenDate } from "@/hooks/useReadingLogsBetweenDate";
 
 const contributionData = [
   {
@@ -24,25 +25,11 @@ export const ContributionCalenderCard = () => {
   const [conData, setConData] = useState<
     Record<string, { level: number }>[] | undefined
   >([]);
-
+  const { readingLogs, isLoading, isError } = useReadingLogsBetweenDate(startDate, endDate);
   useEffect(() => {
-    const fetchData = async () => {
-      const reading_logs = await apiV1Get(
-        "/users/reading_logs/retrieve-by-date",
-        {
-          startDate: startDate,
-          endDate: endDate,
-        }
-      );
-      if (reading_logs.length === 0) {
-        setConData(undefined);
-      } else {
-        setConData(reading_logs);
-      }
-      console.log(reading_logs);
-    };
-    fetchData();
-  }, [startDate, endDate]);
+    setConData(readingLogs)
+  }
+  , [readingLogs])
 
   return (
     <div className="card">

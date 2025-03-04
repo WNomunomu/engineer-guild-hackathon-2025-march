@@ -11,11 +11,27 @@ import { BooksListCard } from "@/components/BookListCard";
 import { ContributionCalenderCard } from "@/components/ContributionCalenderCard";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useParams } from "next/navigation";
+import { useBooks } from "@/hooks/useBooks";
+
 
 export default function UserHome() {
   const { user_name } = useParams();
 
   const { user, isLoading } = useCurrentUser();
+  const response = useBooks();
+  console.log(response.books)
+  const mockAlreadyReadBooks = (response.books || [])
+    .filter((book) => book.completed)
+    .map((book) => ({
+      title: book.title,
+      category: "infrastructure", // You might want to map this to a real category if available
+      totalPage: book.total_pages,
+    }));
+  const mockUnreadBooks = (response.books || []).filter((book) => book.completed != true).map((book) => ({
+    title: book.title,
+    category: "infrastructure", // You might want to map this to a real category if available
+    totalPage: book.total_pages,
+  }));
 
   const router = useRouter();
 
@@ -30,7 +46,7 @@ export default function UserHome() {
     return <div>Loading...</div>;
   }
 
-  console.log(user);
+  console.log(mockAlreadyReadBooks);
   console.log(user_name);
 
   if (user == null) return <></>;
@@ -47,44 +63,46 @@ export default function UserHome() {
     { category: "Python", level: 2 },
   ];
 
-  const mockAlreadyReadBooks = [
-    { title: "入門kubernetes", category: "infrastructure", totalPage: 320 },
-    {
-      title: "達人が教えるWebパフォーマンスチューニング",
-      category: "web",
-      totalPage: 370,
-    },
-    { title: "GCPの教科書", category: "cloud", totalPage: 450 },
-    { title: "nginx実践入門", category: "infrastructure", totalPage: 280 },
-  ];
+  // const mockAlreadyReadBooks = [
+  //   { title: "入門kubernetes", category: "infrastructure", totalPage: 320 },
+  //   {
+  //     title: "達人が教えるWebパフォーマンスチューニング",
+  //     category: "web",
+  //     totalPage: 370,
+  //   },
+  //   { title: "GCPの教科書", category: "cloud", totalPage: 450 },
+  //   { title: "nginx実践入門", category: "infrastructure", totalPage: 280 },
+  // ];
 
-  const mockUnreadBooks = [
-    {
-      title: "入門 コンピュータ科学 ITを支える技術と理論の基礎知識",
-      category: "Computer Science",
-      totalPage: 300,
-    },
-    {
-      title: "Kubernetes CI/CDパイプラインの実装",
-      category: "Infrastructure",
-      totalPage: 350,
-    },
-    { title: "Go言語による並行処理", category: "Backend", totalPage: 400 },
-    { title: "nginx実践入門", category: "Infrastructure", totalPage: 280 },
-    { title: "マスタリングTCP/IP―入門編", category: "Network", totalPage: 350 },
-    {
-      title: "本気で学ぶ Linux実践入門",
-      category: "Infrastructure",
-      totalPage: 500,
-    },
-    { title: "GCPの教科書", category: "Cloud", totalPage: 450 },
-    { title: "入門kubernetes", category: "Infrastructure", totalPage: 320 },
-    {
-      title: "達人が教えるWebパフォーマンスチューニング",
-      category: "Web",
-      totalPage: 370,
-    },
-  ];
+  // const mockUnreadBooks = [
+  //   {
+  //     title: "入門 コンピュータ科学 ITを支える技術と理論の基礎知識",
+  //     category: "Computer Science",
+  //     totalPage: 300,
+  //   },
+  //   {
+  //     title: "Kubernetes CI/CDパイプラインの実装",
+  //     category: "Infrastructure",
+  //     totalPage: 350,
+  //   },
+  //   { title: "Go言語による並行処理", category: "Backend", totalPage: 400 },
+  //   { title: "nginx実践入門", category: "Infrastructure", totalPage: 280 },
+  //   { title: "マスタリングTCP/IP―入門編", category: "Network", totalPage: 350 },
+  //   {
+  //     title: "本気で学ぶ Linux実践入門",
+  //     category: "Infrastructure",
+  //     totalPage: 500,
+  //   },
+  //   { title: "GCPの教科書", category: "Cloud", totalPage: 450 },
+  //   { title: "入門kubernetes", category: "Infrastructure", totalPage: 320 },
+  //   {
+  //     title: "達人が教えるWebパフォーマンスチューニング",
+  //     category: "Web",
+  //     totalPage: 370,
+  //   },
+  // ];
+
+
 
   return (
     <div className="container mt-5">
