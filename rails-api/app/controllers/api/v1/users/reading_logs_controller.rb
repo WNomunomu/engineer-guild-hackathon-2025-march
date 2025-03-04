@@ -26,19 +26,15 @@ module Api
         end
 
         def retrieve_by_date
-          logs = current_api_v1_user.reading_logs.where(read_at: params[:startDate].to_date..params[:endDate].to_date).group(:read_at).pluck(
-            'categories.id',
-            'categories.category',
+          grouped_and_accumulated_logs = current_api_v1_user.reading_logs.where(read_at: params[:startDate].to_date..params[:endDate].to_date).group(:read_at).pluck(
+            :read_at,
             Arel.sql('COALESCE(SUM(reading_logs.pages_read), 0)')
           )
-          binding.pry
-          retval = logs.group_by{ |log| log.read_at }.map do |log|
-            {
-              read_at: log.read_at,
-              level: log.pages_read * AppConstants::EXP_RATE_PER_READ_PAGE,
-            }
+          response_data = grouped_and_accumulated_logs.map do |read_date, pages_read|
+            formatted_date = read_date.strftime('%Y-%m-%d')
+            { formatted_date => { level: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(0) } }
           end
-          render json: retval
+          render json: response_data
         end
 
         def reading_log_params

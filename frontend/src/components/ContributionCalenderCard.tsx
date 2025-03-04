@@ -1,6 +1,6 @@
 import { ContributionCalendar } from "react-contribution-calendar";
 import { useState, useEffect } from "react";
-import { apiV1Post } from "@/api/api";
+import { apiV1Get } from "@/api/api";
 
 const contributionData = [
   {
@@ -17,15 +17,31 @@ const contributionData = [
   },
 ];
 
-export const ContributionCalenderCard = async() => {
-  const [startDate, setStartDate] = useState("2025-04-04");
-  const [endDate, setEndDate] = useState("2026-04-04");
-  const [conData, setConData] = useState({});
+export const ContributionCalenderCard = () => {
+  const [startDate, setStartDate] = useState("2024-04-04");
+  const [endDate, setEndDate] = useState("2025-04-04");
+  const [conData, setConData] = useState<
+    Record<string, { level: number }>[] | undefined
+  >([]);
 
-  const response = await apiV1Post("/users/reading_logs/retrieve-by-date", {
-    startDate: startDate,
-    endDate: endDate
-  })
+  useEffect(() => {
+    const fetchData = async () => {
+      const reading_logs = await apiV1Get(
+        "/users/reading_logs/retrieve-by-date",
+        {
+          startDate: startDate,
+          endDate: endDate,
+        }
+      );
+      if (reading_logs.length === 0) {
+        setConData(undefined);
+      } else {
+        setConData(reading_logs);
+      }
+      console.log(reading_logs);
+    };
+    fetchData();
+  }, [startDate, endDate]);
 
   return (
     <div className="card">

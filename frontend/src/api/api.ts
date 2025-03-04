@@ -11,10 +11,14 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-export const apiV1Get = async (url: string) => {
+export const apiV1Get = async (url: string, params?: any) => {
   const config = getAuthHeaders();
   try {
-    const response = await apiClient.get(url, { headers: config });
+    const response = await apiClient.get(url, {
+      headers: config,
+      params: params,
+    });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.errors);

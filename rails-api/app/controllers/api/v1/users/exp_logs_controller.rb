@@ -18,9 +18,8 @@ module Api
           # pluck は配列で返ってくるので、そのまま map で整形
           response_data = category_pages.map do |category_id, category_name, pages_read|
             {
-              category_id: category_id,
-              category_name: category_name,
-              exp: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
+              category: category_name,
+              level: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
             }
           end
         
