@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ContributionCalendar } from "react-contribution-calendar";
 import { useState, useEffect } from "react";
 import { apiV1Get } from "@/api/api";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { LevelCard } from "@/components/LevelCard";
@@ -32,17 +33,17 @@ const mockUnreadBooks = [
   },
 ];
 
-const initialLevelData = [
-  { category: "Computer Science", level: 7 },
-  { category: "Backend", level: 5 },
-  { category: "Infrastructure", level: 8 },
-  { category: "CI/CD", level: 6 },
-  { category: "Network", level: 6 },
-  { category: "Cloud", level: 5 },
-  { category: "Web", level: 6 },
-  { category: "Go", level: 3 },
-  { category: "Python", level: 2 },
-];
+// const initialLevelData = [
+//   { category: "Computer Science", level: 7 },
+//   { category: "Backend", level: 5 },
+//   { category: "Infrastructure", level: 8 },
+//   { category: "CI/CD", level: 6 },
+//   { category: "Network", level: 6 },
+//   { category: "Cloud", level: 5 },
+//   { category: "Web", level: 6 },
+//   { category: "Go", level: 3 },
+//   { category: "Python", level: 2 },
+// ];
 
 export default function ExpLogs() {
   const [levelData, setLevelData] = useState<any[] | undefined>([]);

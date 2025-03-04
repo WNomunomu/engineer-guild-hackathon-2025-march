@@ -11,7 +11,7 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-export const apiV1Get = async (url: string, params?: any) => {
+export const apiV1Get = async (url: string, params?: never) => {
   const config = getAuthHeaders();
   try {
     const response = await apiClient.get(url, {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -41,41 +42,41 @@ interface BookDataForStack {
   totalPage: number;
 }
 
-const mockUnreadBooks = [
-  {
-    title: "入門 コンピュータ科学 ITを支える技術と理論の基礎知識",
-    category: "Computer Science",
-    totalPage: 300,
-  },
-  {
-    title: "Kubernetes CI/CDパイプラインの実装",
-    category: "Infrastructure",
-    totalPage: 350,
-  },
-  { title: "Go言語による並行処理", category: "Backend", totalPage: 400 },
-  { title: "nginx実践入門", category: "Infrastructure", totalPage: 280 },
-  { title: "マスタリングTCP/IP―入門編", category: "Network", totalPage: 350 },
-  {
-    title: "本気で学ぶ Linux実践入門",
-    category: "Infrastructure",
-    totalPage: 500,
-  },
-  { title: "GCPの教科書", category: "Cloud", totalPage: 450 },
-  { title: "入門kubernetes", category: "Infrastructure", totalPage: 320 },
-  {
-    title: "達人が教えるWebパフォーマンスチューニング",
-    category: "Web",
-    totalPage: 370,
-  },
-];
+// const mockUnreadBooks = [
+//   {
+//     title: "入門 コンピュータ科学 ITを支える技術と理論の基礎知識",
+//     category: "Computer Science",
+//     totalPage: 300,
+//   },
+//   {
+//     title: "Kubernetes CI/CDパイプラインの実装",
+//     category: "Infrastructure",
+//     totalPage: 350,
+//   },
+//   { title: "Go言語による並行処理", category: "Backend", totalPage: 400 },
+//   { title: "nginx実践入門", category: "Infrastructure", totalPage: 280 },
+//   { title: "マスタリングTCP/IP―入門編", category: "Network", totalPage: 350 },
+//   {
+//     title: "本気で学ぶ Linux実践入門",
+//     category: "Infrastructure",
+//     totalPage: 500,
+//   },
+//   { title: "GCPの教科書", category: "Cloud", totalPage: 450 },
+//   { title: "入門kubernetes", category: "Infrastructure", totalPage: 320 },
+//   {
+//     title: "達人が教えるWebパフォーマンスチューニング",
+//     category: "Web",
+//     totalPage: 370,
+//   },
+// ];
 
 export default function AddBook() {
   const [isbn, setIsbn] = useState<string>("");
   const [bookData, setBookData] = useState<BookData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { books, isLoading, isError } = useBooks();
-  console.log(books)
+  const { books, _isLoading, _isError } = useBooks();
+  console.log(books);
 
   const [isAnimationComplete, setIsAnimationComplete] =
     useState<boolean>(false);
@@ -181,11 +182,11 @@ export default function AddBook() {
       total_pages: book.summary.pages ? parseInt(book.summary.pages, 10) : 200,
       isbn: book.isbn,
       author: book.summary.author,
-      categories: "a,ss"
-    })
+      categories: "a,ss",
+    });
 
-    console.log(response);    
-    
+    console.log(response);
+
     setBookDataArrayNew((prevBooks) => {
       const updatedBooks = [formattedBook, ...prevBooks];
       console.log(updatedBooks);
@@ -198,7 +199,7 @@ export default function AddBook() {
     // 未読本のリスト（固定データ）
     setBookDataArrayUnread((prevBooks) => {
       // const updatedBooks = [...prevBooks, ...mockUnreadBooks];
-      const updatedBooks = books
+      const updatedBooks = books;
       setOffsetsUnread(
         updatedBooks.map(() => Math.floor(Math.random() * 50) - 20)
       );
