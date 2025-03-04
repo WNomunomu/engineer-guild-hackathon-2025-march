@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ContributionCalendar } from "react-contribution-calendar";
+import { useState, useEffect } from "react";
+import { apiV1Get } from "@/api/api";
+import { useReadingLogsBetweenDate } from "@/hooks/useReadingLogsBetweenDate";
 
 const contributionData = [
   {
@@ -16,16 +20,27 @@ const contributionData = [
 ];
 
 export const ContributionCalenderCard = () => {
+  const [startDate, setStartDate] = useState("2024-04-04");
+  const [endDate, setEndDate] = useState("2025-04-04");
+  const [conData, setConData] = useState<
+    Record<string, { level: number }>[] | undefined
+  >([]);
+  const { readingLogs, isLoading, isError } = useReadingLogsBetweenDate(startDate, endDate);
+  useEffect(() => {
+    setConData(readingLogs)
+  }
+  , [readingLogs])
+
   return (
     <div className="card">
       <div className="card-body">
         <div className="d-flex row">
           <div className="col-11">
             <ContributionCalendar
-              data={contributionData}
+              data={conData}
               dateOptions={{
-                start: "2023-04-04",
-                end: "2024-04-04",
+                start: startDate,
+                end: endDate,
                 // daysOfTheWeek: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
                 startsOnSunday: true,
                 includeBoundary: true,

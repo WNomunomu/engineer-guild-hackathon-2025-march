@@ -1,7 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
 import { LevelCard } from "@/components/LevelCard";
+import { useState, useEffect } from "react";
+import { apiV1Get } from "@/api/api";
+import { useExpLogs } from "@/hooks/useExpLogs";
+
 
 const mockUnreadBooks = [
   {
@@ -31,24 +36,26 @@ const mockUnreadBooks = [
   },
 ];
 
-const initialLevelData = [
-  { category: "Computer Science", level: 7 },
-  { category: "Backend", level: 5 },
-  { category: "Infrastructure", level: 8 },
-  { category: "CI/CD", level: 6 },
-  { category: "Network", level: 6 },
-  { category: "Cloud", level: 5 },
-  { category: "Web", level: 6 },
-  { category: "Go", level: 3 },
-  { category: "Python", level: 2 },
-];
+// const initialLevelData = [
+//   { category: "Computer Science", level: 7 },
+//   { category: "Backend", level: 5 },
+//   { category: "Infrastructure", level: 8 },
+//   { category: "CI/CD", level: 6 },
+//   { category: "Network", level: 6 },
+//   { category: "Cloud", level: 5 },
+//   { category: "Web", level: 6 },
+//   { category: "Go", level: 3 },
+//   { category: "Python", level: 2 },
+// ];
 
 export default function ExpLogs() {
-  const [levelData, setLevelData] = useState(initialLevelData);
+  const [levelData, setLevelData] = useState<any[] | undefined>([]);
   const [selectedBook, setSelectedBook] = useState("");
   const [readPages, setReadPages] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState("");
+  const { expLogs, isLoading, isError } = useExpLogs();
+  setLevelData(expLogs)
 
   const [alreadyReadBooks, setAlreadyReadBooks] = useState<
     { title: string; category: string; totalPage: number; readPages: number }[]
@@ -69,7 +76,7 @@ export default function ExpLogs() {
     ];
     setAlreadyReadBooks(updatedBooks);
 
-    const updatedLevelData = levelData.map((data) =>
+    const updatedLevelData = (levelData || []).map((data) =>
       data.category === book.category
         ? {
             ...data,
@@ -142,7 +149,7 @@ export default function ExpLogs() {
         </div>
       )}
       <div className="mx-auto mt-4 w-75">
-        <LevelCard LevelInfoArray={levelData} />
+        <LevelCard LevelInfoArray={levelData || []} />
       </div>
     </>
   );

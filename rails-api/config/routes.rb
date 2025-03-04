@@ -9,14 +9,19 @@ Rails.application.routes.draw do
 
       # ユーザーに紐づくリソース
       namespace :users do
-        resources :books, only: [:index, :create, :destroy, :update] do
+        resources :books, only: [:index, :create] do
           collection do
             delete ':isbn', to: 'books#destroy'
             patch ':isbn', to: 'books#update'
           end
         end
 
-        post 'reading_logs', to: 'reading_logs#create'
+        resources :reading_logs, only: [:index, :create] do
+          collection do
+            get 'retrieve-by-date', to: 'reading_logs#retrieve_by_date'
+          end
+        end
+
         get 'reading_logs', to: 'reading_logs#index'
 
         get 'exp_logs', to: 'exp_logs#index'

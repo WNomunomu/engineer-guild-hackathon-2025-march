@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosError } from "axios";
 import { getAuthHeaders } from "@/utils/auth-utils";
 
@@ -11,10 +12,14 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-export const apiV1Get = async (url: string) => {
+export const apiV1Get = async (url: string, params?: Record<string, any>) => {
   const config = getAuthHeaders();
   try {
-    const response = await apiClient.get(url, { headers: config });
+    const response = await apiClient.get(url, {
+      headers: config,
+      params: params,
+    });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     // AxiosError 型を指定
