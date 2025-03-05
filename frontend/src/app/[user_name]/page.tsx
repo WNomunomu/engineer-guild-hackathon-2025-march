@@ -90,10 +90,12 @@ export default function UserHome() {
           />
         </div>
       </div>
-      <div>
+      <div className="mb-3">
         <ContributionCalenderCard />
       </div>
-      <BooksListCard />
+      <div className="mb-3">
+        <BooksListCard />
+      </div>
     </div>
   );
 }
