@@ -69,8 +69,8 @@ export const BooksListCard = () => {
     );
   }
 
-  const isbnList = books?.map((book) => {
-    return book.isbn;
+  const bookIdList = books?.map((book) => {
+    return book.id;
   });
 
   return (
@@ -78,12 +78,9 @@ export const BooksListCard = () => {
       <div className="card-body">
         <div className="mb-5">
           <div className="row mx-0">
-            {isbnList?.map((isbn) => (
-              <div
-                key={isbn}
-                className="col-12 col-sm-6 col-md-4 col-lg-2 mt-4"
-              >
-                <BookThumbnail isbn={isbn} />
+            {bookIdList?.map((id) => (
+              <div key={id} className="col-12 col-sm-6 col-md-4 col-lg-2 mt-4">
+                <BookThumbnail bookId={id} />
               </div>
             ))}
           </div>

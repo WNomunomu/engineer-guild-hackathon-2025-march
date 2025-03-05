@@ -86,17 +86,6 @@ export const Sidebar = () => {
                 レベルを見る
               </Link>
             </li>
-            <li>
-              <Link
-                href={`/${user_name}/progress`}
-                className="nav-link text-white d-flex align-items-center hover-element"
-              >
-                <span className="material-symbols-outlined fs-5 me-2">
-                  edit_note
-                </span>
-                読書記録する
-              </Link>
-            </li>
           </>
         ) : (
           <>
@@ -139,11 +128,11 @@ export const Sidebar = () => {
           onClick={() => setShowLogout(!showLogout)}
         >
           <Image
-            src="/globe.svg"
+            src="/bird_fukurou_run.png"
             alt="User Icon"
             className="rounded-circle"
-            width={40}
-            height={40}
+            width={70}
+            height={70}
           />
         </div>
       )}

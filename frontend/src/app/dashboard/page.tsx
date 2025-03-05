@@ -6,21 +6,21 @@ import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const { user, isLoading } = useCurrentUser();
-
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && (!user || !user.name)) {
+    if (isLoading) return;
+
+    if (!user || !user.name) {
       router.push("/login");
+    } else {
+      router.push(`/${user.name}`);
     }
-  }, [user, router, isLoading]);
+  }, [user, isLoading, router]);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (user == null) return <></>;
-  if (user) {
-    router.push(`/${user.name}`);
-  }
+  return <></>; // 何も表示しない
 }
