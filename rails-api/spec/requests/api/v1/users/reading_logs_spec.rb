@@ -11,7 +11,7 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
   describe "GET /api/v1/users/reading_logs" do
     describe "成功時" do
       before do
-        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: Date.today, book: create(:book, user: User.find_by(email: "a@a.com")))
+        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: "2025-03-04", book: create(:book, user: User.find_by(email: "a@a.com")))
       end
       it "読書履歴が取得できること" do
         get "api/v1/users/reading_logs", headers: header
@@ -23,7 +23,7 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
     describe "ログインしていない場合" do
       before do
         header["access-token"] = ""
-        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: Date.today, book: create(:book, user: User.find_by(email: "a@a.com")))
+        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: "2025-03-04", book: create(:book, user: User.find_by(email: "a@a.com")))
       end
       it "401レスポンスが返ってくる" do
         get "api/v1/users/reading_logs", headers: header
@@ -35,7 +35,7 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
   describe "POST /api/v1/users/reading_logs" do
     describe "成功時" do
       it "読書履歴が登録できること" do
-        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: Date.today, pages_read: 10 }
+        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: "2025-03-04", pages_read: 10 }
         expect(response).to have_http_status(201)
         expect(User.find_by(email: "a@a.com").reading_logs.count).to eq(1)
       end
@@ -46,14 +46,14 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
         header["access-token"] = ""
       end
       it "401レスポンスが返ってくる" do
-        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: Date.today, pages_read: 10 }
+        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: "2025-03-04", pages_read: 10 }
         expect(response).to have_http_status(401)
       end
     end
 
     describe "パラメーターが正しくないとき" do
       it "読書履歴が登録できないこと" do
-        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: Date.today, pages_read: -1 }
+        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: "2025-03-04", pages_read: -1 }
         expect(response).to have_http_status(422)
         expect(User.find_by(email: "a@a.com").reading_logs.count).to eq(0)
       end
@@ -65,17 +65,17 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
       before do
         user = User.find_by(email: "a@a.com")
         book = create(:book, user:)
-        user.reading_logs.create!(pages_read: 10, read_at: Date.today, book: book)
-        user.reading_logs.create!(pages_read: 20, read_at: Date.today, book: book)
-        user.reading_logs.create!(pages_read: 30, read_at: Date.today - 1, book: create(:book, user:))
-        user.reading_logs.create!(pages_read: 20, read_at: Date.today - 50, book: book)
+        user.reading_logs.create!(pages_read: 10, read_at: "2025-03-04", book: book)
+        user.reading_logs.create!(pages_read: 20, read_at: "2025-03-04", book: book)
+        user.reading_logs.create!(pages_read: 30, read_at: "2025-03-03", book: create(:book, user:))
+        user.reading_logs.create!(pages_read: 20, read_at: "2025-01-01", book: book)
       end
 
       it "指定した期間の読書履歴が取得できること" do
-        get "api/v1/users/reading_logs/retrieve-by-date", headers: header, params: { startDate: Date.today - 2, endDate: Date.today }
+        get "api/v1/users/reading_logs/retrieve-by-date", headers: header, params: { startDate: "2025-03-02", endDate: "2025-03-04" }
         expect(response).to have_http_status(200)
         expect(response.body).to eq([
-          {"2025-03-04":{ "level":3}},
+          {"2025-03-04": {"level":3}},
           {"2025-03-03": {"level":3}}
         ].to_json)
       end

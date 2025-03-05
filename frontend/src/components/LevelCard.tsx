@@ -9,7 +9,7 @@ export type LevelInfo = {
 };
 
 type LevelCardProps = {
-  LevelInfoArray: LevelInfo[];
+  LevelInfoArray?: LevelInfo[];
 };
 
 const LevelBar = (props: { level: number }) => {
@@ -51,6 +51,8 @@ const LevelBar = (props: { level: number }) => {
 
 export const LevelCard = (props: LevelCardProps) => {
   const { LevelInfoArray } = props;
+
+  if (LevelInfoArray == null) return <></>;
 
   return (
     <div className="card shadow-sm">

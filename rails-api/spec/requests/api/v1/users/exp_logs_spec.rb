@@ -33,11 +33,13 @@ RSpec.describe "Api::V1::User::ExpLogs", type: :request do
         [
           {
             "category" => category1.category,
-            "level"    => (300 * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
+            "level"    => (300 * AppConstants::EXP_RATE_PER_READ_PAGE).round(0),
+            "exp" => 300
           },
           {
             "category" => category2.category,
-            "level"    => (200 * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
+            "level"    => (200 * AppConstants::EXP_RATE_PER_READ_PAGE).round(0),
+            "exp" => 200,
           },
         ]
       end

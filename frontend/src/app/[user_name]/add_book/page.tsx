@@ -16,6 +16,7 @@ interface VolumeInfo {
   publisher?: string;
   publishedDate?: string;
   pageCount?: number;
+  categories?: string[];
   imageLinks?: {
     thumbnail?: string;
   };
@@ -32,6 +33,7 @@ interface BookData {
     publisher: string;
     pubdate: string;
     pages: string | null;
+    categories: string[];
   };
   cover: string;
   isbn: string;
@@ -144,6 +146,7 @@ export default function AddBook() {
               publisher: item.volumeInfo.publisher || "不明",
               pubdate: item.volumeInfo.publishedDate || "不明",
               pages: item.volumeInfo.pageCount?.toString() || null,
+              categories: item.volumeInfo.categories || [],
             },
             cover:
               googleCover ||
@@ -183,7 +186,7 @@ export default function AddBook() {
       total_pages: book.summary.pages ? parseInt(book.summary.pages, 10) : 200,
       isbn: book.isbn,
       author: book.summary.author,
-      categories: "a,ss",
+      categories: book.summary.categories,
     });
 
     console.log(response);
@@ -300,6 +303,9 @@ export default function AddBook() {
                     </p>
                     <p>
                       <strong>ページ数:</strong> {book.summary.pages || "不明"}
+                    </p>
+                    <p>
+                      <strong>カテゴリー:</strong> {book.summary.categories}
                     </p>
 
                     <div className="text-center">

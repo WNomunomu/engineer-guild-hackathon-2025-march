@@ -17,24 +17,28 @@ module Api
             return
           end
 
-          # category 再作成
+          # category 作成
           begin
             category_list = []
-            for category in params[:categories].split(',')
-              category_list.append(Category.find_or_create_by!(category: category))
+            
+            categories = params[:categories]
+            categories = JSON.parse(categories) if categories.is_a?(String)
+            
+            categories.each do |category|
+              category_list << Category.find_or_create_by!(category: category)
             end
-          rescue 
-            render json: { error: 'Failed to update category' }, status: :unprocessable_entity
+          rescue => e
+            render json: { error: "Failed to create category: #{e.message}" }, status: :unprocessable_entity
             return
           end
-
+        
           # book_category 作成
           begin
-            for category in category_list
+            category_list.each do |category|
               BookCategory.create!(book: book, category: category)
             end
-          rescue
-            render json: { error: 'Failed to update book_category' }, status: :unprocessable_entity
+          rescue => e
+            render json: { error: "Failed to create book_category: #{e.message}" }, status: :unprocessable_entity
             return
           end
 
@@ -49,33 +53,44 @@ module Api
         def create
           # 本作成
           begin
-            book = Book.create!(isbn: params[:isbn], total_pages: params[:total_pages], completed: params[:completed], user: current_api_v1_user, title: params[:title], author: params[:author])
-          rescue ActiveRecord::RecordNotFound 
-            render json: { error: 'Failed to create book' }, status: :unprocessable_entity
+            book = Book.create!(
+              isbn: params[:isbn], 
+              total_pages: params[:total_pages], 
+              completed: params[:completed], 
+              user: current_api_v1_user, 
+              title: params[:title], 
+              author: params[:author]
+            )
+          rescue ActiveRecord::RecordInvalid => e
+            render json: { error: "Failed to create book: #{e.message}" }, status: :unprocessable_entity
             return
           end
-
+        
           # category 作成
           begin
             category_list = []
-            for category in params[:categories].split(',')
-              category_list.append(Category.find_or_create_by!(category: category))
+
+            categories = params[:categories]
+            categories = JSON.parse(categories) if categories.is_a?(String)
+            
+            categories.each do |category|
+              category_list << Category.find_or_create_by!(category: category)
             end
-          rescue 
-            render json: { error: 'Failed to create category' }, status: :unprocessable_entity
+          rescue => e
+            render json: { error: "Failed to create category: #{e.message}" }, status: :unprocessable_entity
             return
           end
-
+        
           # book_category 作成
           begin
-            for category in category_list
+            category_list.each do |category|
               BookCategory.create!(book: book, category: category)
             end
-          rescue
-            render json: { error: 'Failed to create book_category' }, status: :unprocessable_entity
+          rescue => e
+            render json: { error: "Failed to create book_category: #{e.message}" }, status: :unprocessable_entity
             return
           end
-
+        
           render json: { message: 'Book registered successfully', book: book }, status: :created
         end
 

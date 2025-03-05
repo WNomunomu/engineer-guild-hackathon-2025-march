@@ -13,7 +13,7 @@ get_books:
             items:
               type: object
               properties:
-                $ref: 'components.yaml#/book_example'
+                $ref: "components.yaml#/book_example"
     "500":
       description: サーバーエラー
       content:
@@ -65,7 +65,7 @@ create_book:
           schema:
             type: object
             properties:
-              $ref: 'components.yaml#/book_example'
+              $ref: "components.yaml#/book_example"
     "422":
       description: 不正なパラメーター
       content:

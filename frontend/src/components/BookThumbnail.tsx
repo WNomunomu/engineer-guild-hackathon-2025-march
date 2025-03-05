@@ -13,8 +13,6 @@ export const BookThumbnail = ({ isbn }: BookThumbnailProps) => {
   const { user_name } = useParams();
   const [cover, setCover] = useState<string | null>(null);
 
-  console.log(isbn)
-
   useEffect(() => {
     const fetchCover = async () => {
       try {
@@ -40,7 +38,7 @@ export const BookThumbnail = ({ isbn }: BookThumbnailProps) => {
 
   return (
     <div
-      className="cursor-pointer"
+      className="cursor-pointer hover-element"
       onClick={() => router.push(`/${user_name}/books/${isbn}`)}
     >
       <Image

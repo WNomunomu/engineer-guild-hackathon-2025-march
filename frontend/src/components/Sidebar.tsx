@@ -45,7 +45,7 @@ export const Sidebar = () => {
             <li className="nav-item">
               <Link
                 href={`/${user_name}/add_book`}
-                className="nav-link text-white d-flex align-items-center"
+                className="nav-link text-white d-flex align-items-center hover-element"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   book
@@ -56,7 +56,7 @@ export const Sidebar = () => {
             <li>
               <Link
                 href={`/${user_name}/books`}
-                className="nav-link text-white d-flex align-items-center"
+                className="nav-link text-white d-flex align-items-center hover-element"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   menu_book
@@ -67,7 +67,7 @@ export const Sidebar = () => {
             <li>
               <Link
                 href={`/${user_name}/reading_logs`}
-                className="nav-link text-white d-flex align-items-center"
+                className="nav-link text-white d-flex align-items-center hover-element"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   history_edu
@@ -78,7 +78,7 @@ export const Sidebar = () => {
             <li>
               <Link
                 href={`/${user_name}/exp_logs`}
-                className="nav-link text-white d-flex align-items-center"
+                className="nav-link text-white d-flex align-items-center hover-element"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   military_tech
@@ -89,7 +89,7 @@ export const Sidebar = () => {
             <li>
               <Link
                 href={`/${user_name}/progress`}
-                className="nav-link text-white d-flex align-items-center"
+                className="nav-link text-white d-flex align-items-center hover-element"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   edit_note
@@ -103,7 +103,7 @@ export const Sidebar = () => {
             <li>
               <Link
                 href="/login"
-                className="nav-link text-white d-flex align-items-center"
+                className="nav-link text-white d-flex align-items-center hover-element"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   login
@@ -114,7 +114,7 @@ export const Sidebar = () => {
             <li>
               <Link
                 href="/signup"
-                className="nav-link text-white d-flex align-items-center"
+                className="nav-link text-white d-flex align-items-center hover-element"
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   person_add
