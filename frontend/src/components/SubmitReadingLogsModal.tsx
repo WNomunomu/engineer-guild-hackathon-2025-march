@@ -8,7 +8,7 @@ import { useBooks, type Book } from "@/hooks/useBooks";
 export const SubmitReadingLogsModal = () => {
   const { data, close } = useSubmitReadingLogsModal();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
@@ -69,7 +69,9 @@ export const SubmitReadingLogsModal = () => {
         close();
       }, 1500);
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     } finally {
       setIsLoading(false);
     }
