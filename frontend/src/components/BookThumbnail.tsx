@@ -13,8 +13,6 @@ export const BookThumbnail = ({ isbn }: BookThumbnailProps) => {
   const { user_name } = useParams();
   const [cover, setCover] = useState<string | null>(null);
 
-  console.log(isbn)
-
   useEffect(() => {
     const fetchCover = async () => {
       try {
