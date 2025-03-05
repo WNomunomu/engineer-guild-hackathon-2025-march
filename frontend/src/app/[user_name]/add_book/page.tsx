@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { BookStack } from "@/components/BookStackCard";
 import { apiV1Post } from "@/api/api";
 import { useBooks } from "@/hooks/useBooks";
+import { Covered_By_Your_Grace } from "next/font/google";
 
 // Google Books API のレスポンスの型を定義
 interface VolumeInfo {
@@ -44,34 +45,6 @@ interface BookDataForStack {
   category: string;
   totalPage: number;
 }
-
-// const mockUnreadBooks = [
-//   {
-//     title: "入門 コンピュータ科学 ITを支える技術と理論の基礎知識",
-//     category: "Computer Science",
-//     totalPage: 300,
-//   },
-//   {
-//     title: "Kubernetes CI/CDパイプラインの実装",
-//     category: "Infrastructure",
-//     totalPage: 350,
-//   },
-//   { title: "Go言語による並行処理", category: "Backend", totalPage: 400 },
-//   { title: "nginx実践入門", category: "Infrastructure", totalPage: 280 },
-//   { title: "マスタリングTCP/IP―入門編", category: "Network", totalPage: 350 },
-//   {
-//     title: "本気で学ぶ Linux実践入門",
-//     category: "Infrastructure",
-//     totalPage: 500,
-//   },
-//   { title: "GCPの教科書", category: "Cloud", totalPage: 450 },
-//   { title: "入門kubernetes", category: "Infrastructure", totalPage: 320 },
-//   {
-//     title: "達人が教えるWebパフォーマンスチューニング",
-//     category: "Web",
-//     totalPage: 370,
-//   },
-// ];
 
 export default function AddBook() {
   const [isbn, setIsbn] = useState<string>("");
@@ -139,6 +112,7 @@ export default function AddBook() {
       if (data.items && data.items.length > 0) {
         const books: BookData[] = data.items.map((item: GoogleBooksItem) => {
           const googleCover = item.volumeInfo.imageLinks?.thumbnail || "";
+          console.log(`googleCover: ${googleCover}`);
           return {
             summary: {
               title: item.volumeInfo.title,
@@ -148,9 +122,7 @@ export default function AddBook() {
               pages: item.volumeInfo.pageCount?.toString() || null,
               categories: item.volumeInfo.categories || [],
             },
-            cover:
-              googleCover ||
-              `https://ndlsearch.ndl.go.jp/thumbnail/${sanitizedIsbn}.jpg`,
+            cover: googleCover,
             isbn: sanitizedIsbn,
           };
         });
@@ -186,6 +158,7 @@ export default function AddBook() {
       total_pages: book.summary.pages ? parseInt(book.summary.pages, 10) : 200,
       isbn: book.isbn,
       author: book.summary.author,
+      image_url: book.cover,
       categories: book.summary.categories,
     });
 
