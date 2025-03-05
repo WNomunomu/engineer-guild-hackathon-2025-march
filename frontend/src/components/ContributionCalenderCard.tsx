@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ContributionCalendar } from "react-contribution-calendar";
 import { useState, useEffect, useRef } from "react";
