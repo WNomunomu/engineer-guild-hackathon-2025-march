@@ -4,21 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { apiV1Get } from "@/api/api";
 import { useReadingLogsBetweenDate } from "@/hooks/useReadingLogsBetweenDate";
 
-const contributionData = [
-  {
-    "2023-04-20": { level: 2 },
-  },
-  {
-    "2023-07-08": { level: 1 },
-  },
-  {
-    "2023-07-09": { level: 4 },
-  },
-  {
-    "2024-03-31": { level: 3 },
-  },
-];
-
 export const ContributionCalenderCard = () => {
   const [startDate, setStartDate] = useState("2024-04-04");
   const [endDate, setEndDate] = useState("2025-04-04");

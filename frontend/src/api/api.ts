@@ -19,7 +19,6 @@ export const apiV1Get = async (url: string, params?: Record<string, any>) => {
       headers: config,
       params: params,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     // AxiosError 型を指定
