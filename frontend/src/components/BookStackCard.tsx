@@ -21,15 +21,17 @@ export const BookStack = ({
 }) => {
   const colorVariants = ["#1e7a63", "#2da882", "#39b894"];
 
+  const reversedBookDataArray = bookDataArray?.reverse();
+
   return (
     <div
       className="d-flex flex-column align-items-center overflow-auto p-2"
       style={{ maxHeight: "350px" }}
     >
-      {(bookDataArray || []).map((bookData, index) => (
+      {(reversedBookDataArray || []).map((bookData, index) => (
         <div
           key={index}
-          className="w-75 py-2 px-3 text-white text-center rounded-3 shadow-sm fs-6 overflow-hidden text-truncate"
+          className="w-75 py-2 px-3 text-white text-center rounded-3 shadow-sm fs-6 overflow-hidden"
           style={{
             backgroundColor: colorVariants[index % colorVariants.length],
             transform: `translateX(${offsets[index] || 0}px)`,
@@ -48,7 +50,7 @@ export const BookStackCard = ({
   alreadyReadBooks,
   unreadBooks,
 }: BookStackCardProps) => {
-  const [showReadBooks, setShowReadBooks] = useState<boolean>(true);
+  const [showReadBooks, setShowReadBooks] = useState<boolean>(false);
 
   // 既読本と未読本のオフセットを独立に管理
   const [readOffsets, setReadOffsets] = useState<number[]>([]);
@@ -76,20 +78,20 @@ export const BookStackCard = ({
           <button
             type="button"
             className={`btn ${
-              showReadBooks ? "btn-original" : "btn-outline-original"
-            }`}
-            onClick={() => setShowReadBooks(true)}
-          >
-            既読本の山
-          </button>
-          <button
-            type="button"
-            className={`btn ${
               !showReadBooks ? "btn-original" : "btn-outline-original"
             }`}
             onClick={() => setShowReadBooks(false)}
           >
             未読本の山
+          </button>
+          <button
+            type="button"
+            className={`btn ${
+              showReadBooks ? "btn-original" : "btn-outline-original"
+            }`}
+            onClick={() => setShowReadBooks(true)}
+          >
+            既読本の山
           </button>
         </div>
         <BookStack bookDataArray={bookDataArray} offsets={offsets} />
