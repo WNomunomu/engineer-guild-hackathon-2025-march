@@ -19,7 +19,8 @@ module Api
           response_data = category_pages.map do |category_id, category_name, pages_read|
             {
               category: category_name,
-              level: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(2)
+              level: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(0),
+              exp: pages_read,
             }
           end
         
