@@ -1,160 +1,204 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { logout } from "@/utils/auth-utils";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { logout } from "@/utils/auth-utils";
 
 export const Sidebar = () => {
   const [showLogout, setShowLogout] = useState(false);
-
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const { user_name } = useParams();
 
   const handleLogout = async () => {
     try {
       await logout();
-      router.push("/"); // ログアウト成功時にリダイレクト
+      setShowLogout(false);
+      router.push("/");
     } catch (error) {
       console.error("ログアウトに失敗しました", error);
     }
   };
 
+  const handleUserIconClick = () => {
+    if (isCollapsed) {
+      setIsCollapsed(false);
+    }
+    setShowLogout(!showLogout);
+  };
+
+  useEffect(() => {
+    if (!user_name) {
+      setShowLogout(false);
+    }
+  }, [user_name]);
+
   return (
     <div
-      className="d-flex flex-column flex-shrink-0 p-3 position-relative"
-      style={{
-        width: "250px",
-        minHeight: "100vh",
-        backgroundColor: "#249474",
-        overflowY: "auto",
-      }}
+      className={`
+        d-flex flex-column flex-shrink-0 p-3 position-relative 
+        text-white ${isCollapsed ? "sidebar-collapsed" : "sidebar-expanded"}
+      `}
     >
-      <h3 className="text-center mb-3 text-white">
-        <Link
-          href={user_name ? `/${user_name}` : "/"}
-          className="text-white text-decoration-none"
-        >
-          HackBook
-        </Link>
-      </h3>
-      <ul className="nav nav-pills flex-column mb-auto">
+      {/* サイドバー折りたたみボタン */}
+      <button
+        className="btn btn-outline-light position-absolute top-0 end-0 m-2 z-3"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
+        <span className="material-symbols-outlined">
+          {isCollapsed ? "chevron_right" : "chevron_left"}
+        </span>
+      </button>
+
+      {/* アプリケーションタイトル */}
+      {!isCollapsed && (
+        <h3 className="text-center mb-4">
+          <Link
+            href={user_name ? `/${user_name}` : "/"}
+            className="text-white text-decoration-none"
+          >
+            HackBook
+          </Link>
+        </h3>
+      )}
+
+      {/* ナビゲーションメニュー */}
+      <ul
+        className={`
+        nav nav-pills flex-column mb-auto 
+        ${isCollapsed ? "text-center" : ""}
+        ${isCollapsed ? "mt-5" : ""}
+      `}
+      >
         {user_name ? (
           <>
-            <li className="nav-item">
-              <Link
-                href={`/${user_name}/add_book`}
-                className="nav-link text-white d-flex align-items-center hover-element"
-              >
-                <span className="material-symbols-outlined fs-5 me-2">
-                  book
-                </span>
-                本を追加
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={`/${user_name}/books`}
-                className="nav-link text-white d-flex align-items-center hover-element"
-              >
-                <span className="material-symbols-outlined fs-5 me-2">
-                  menu_book
-                </span>
-                本を見る
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={`/${user_name}/reading_logs`}
-                className="nav-link text-white d-flex align-items-center hover-element"
-              >
-                <span className="material-symbols-outlined fs-5 me-2">
-                  history_edu
-                </span>
-                読書ログを見る
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={`/${user_name}/exp_logs`}
-                className="nav-link text-white d-flex align-items-center hover-element"
-              >
-                <span className="material-symbols-outlined fs-5 me-2">
-                  military_tech
-                </span>
-                レベルを見る
-              </Link>
-            </li>
+            <NavItem
+              href={`/${user_name}/add_book`}
+              icon="book"
+              label="本を追加"
+              isCollapsed={isCollapsed}
+            />
+            <NavItem
+              href={`/${user_name}/books`}
+              icon="menu_book"
+              label="本を見る"
+              isCollapsed={isCollapsed}
+            />
+            <NavItem
+              href={`/${user_name}/reading_logs`}
+              icon="history_edu"
+              label="読書ログを見る"
+              isCollapsed={isCollapsed}
+            />
+            <NavItem
+              href={`/${user_name}/exp_logs`}
+              icon="military_tech"
+              label="レベルを見る"
+              isCollapsed={isCollapsed}
+            />
           </>
         ) : (
           <>
-            <li>
-              <Link
-                href="/login"
-                className="nav-link text-white d-flex align-items-center hover-element"
-              >
-                <span className="material-symbols-outlined fs-5 me-2">
-                  login
-                </span>
-                ログイン
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/signup"
-                className="nav-link text-white d-flex align-items-center hover-element"
-              >
-                <span className="material-symbols-outlined fs-5 me-2">
-                  person_add
-                </span>
-                新規登録
-              </Link>
-            </li>
+            <NavItem
+              href="/login"
+              icon="login"
+              label="ログイン"
+              isCollapsed={isCollapsed}
+            />
+            <NavItem
+              href="/signup"
+              icon="person_add"
+              label="新規登録"
+              isCollapsed={isCollapsed}
+            />
           </>
         )}
       </ul>
 
-      {/* ユーザーアイコンとログアウトボタン（ログイン時のみ表示） */}
+      {/* ユーザーセクション */}
       {user_name && (
         <div
-          className="position-absolute d-flex align-items-center"
-          style={{
-            bottom: "10px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            cursor: "pointer",
-          }}
-          onClick={() => setShowLogout(!showLogout)}
+          className={`
+            position-absolute bottom-0 start-50 translate-middle-x 
+            text-center mb-3 pointer
+          `}
+          onClick={handleUserIconClick}
         >
           <Image
             src="/bird_fukurou_run.png"
             alt="User Icon"
-            className="rounded-circle"
+            className="rounded-circle mb-2"
             width={70}
             height={70}
           />
         </div>
       )}
 
-      {/* ログアウトボタン（ログイン時のみ表示） */}
+      {/* ログアウトボタン */}
       {user_name && showLogout && (
         <button
-          className="position-absolute btn btn-danger d-flex align-items-center justify-content-center"
+          className="btn btn-danger position-absolute bottom-0 mb-3 rounded-circle"
           style={{
-            bottom: "10px",
-            left: "calc(50% + 80px)",
-            transform: "translateX(-50%)",
-            width: "40px",
-            height: "40px",
-            borderRadius: "50%",
-            padding: "5px",
+            width: "50px",
+            height: "50px",
+            // 折りたたみ時と展開時で異なる位置に配置
+            left: isCollapsed ? "90px" : "calc(50% + 80px)",
+            transform: isCollapsed ? "none" : "translateX(-50%)",
           }}
           onClick={handleLogout}
         >
           <span className="material-symbols-outlined text-white">logout</span>
         </button>
       )}
+
+      <style jsx>{`
+        .sidebar-expanded {
+          width: 250px;
+          background-color: #249474;
+          transition: width 0.3s ease-in-out;
+        }
+        .sidebar-collapsed {
+          width: 80px;
+          background-color: #249474;
+          transition: width 0.3s ease-in-out;
+        }
+        .pointer {
+          cursor: pointer;
+        }
+        .material-symbols-outlined {
+          font-size: 24px;
+        }
+      `}</style>
     </div>
   );
 };
+
+// ナビゲーションアイテムのコンポーネント
+const NavItem = ({
+  href,
+  icon,
+  label,
+  isCollapsed,
+}: {
+  href: string;
+  icon: string;
+  label: string;
+  isCollapsed: boolean;
+}) => (
+  <li className="nav-item mb-2">
+    <Link
+      href={href}
+      className={`
+        nav-link text-white d-flex align-items-center 
+        ${isCollapsed ? "justify-content-center" : "justify-content-start"}
+      `}
+    >
+      <span className="material-symbols-outlined me-2">{icon}</span>
+      {!isCollapsed && <span>{label}</span>}
+    </Link>
+  </li>
+);
+
+export default Sidebar;
