@@ -30,12 +30,12 @@ import { useBooks } from "@/hooks/useBooks";
 export const BooksListCard = () => {
   const { books, isLoading, isError } = useBooks();
   if (!isLoading && isError) {
-    alert("error loading books")
+    return <></>;
   }
 
-  console.log(books)
-
-  const isbnList = books?.map((book) => {return  book.isbn});
+  const isbnList = books?.map((book) => {
+    return book.isbn;
+  });
 
   return (
     <div className="container mt-4 mb-5">
