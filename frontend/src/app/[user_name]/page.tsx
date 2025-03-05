@@ -24,16 +24,19 @@ export default function UserHome() {
 
   const { data: levelData } = useExpLogs();
 
+  console.log(levelData);
+
   const response = useBooks();
-  // console.log(response.books);
-  const mockAlreadyReadBooks = (response.books || [])
+  console.log(response.books);
+
+  const alreadyReadBooks = (response.books || [])
     .filter((book) => book.completed)
     .map((book) => ({
       title: book.title,
       category: "infrastructure", // You might want to map this to a real category if available
       totalPage: book.total_pages,
     }));
-  const mockUnreadBooks = (response.books || [])
+  const unreadBooks = (response.books || [])
     .filter((book) => book.completed != true)
     .map((book) => ({
       title: book.title,
@@ -82,12 +85,12 @@ export default function UserHome() {
         </div>
         <div className="col-4">
           <BookStackCard
-            alreadyReadBooks={mockAlreadyReadBooks}
-            unreadBooks={mockUnreadBooks}
+            alreadyReadBooks={alreadyReadBooks}
+            unreadBooks={unreadBooks}
           />
         </div>
       </div>
-      <div onClick={() => router.push(`/${user_name}/reading_logs`)}>
+      <div>
         <ContributionCalenderCard />
       </div>
       <BooksListCard />
