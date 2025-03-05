@@ -28,7 +28,7 @@ RSpec.describe "API::V1::Books", type: :request do
         url_params[:isbn] = "1111122222"
         params[:completed] = "true"
         params[:total_pages] = 200
-        params[:categories] = "frontend,ci,cd" # カンマ区切り
+        params[:categories] = ["frontend", "ci", "cd"] # カンマ区切り
       end
       it "修正が成功すること" do
         subject
@@ -36,7 +36,7 @@ RSpec.describe "API::V1::Books", type: :request do
         expect(User.first.books.first.completed).to eq true
         expect(User.first.books.first.book_categories.count).to eq 3
         expect(User.first.books.first.categories.count).to eq 3
-        expect(Category.all.count).to eq 4
+        expect(Category.all.count).to eq 3
         expect(User.first.books.first.total_pages).to eq 200
       end
     end
@@ -63,7 +63,7 @@ RSpec.describe "API::V1::Books", type: :request do
         # 必須パラメーター
         params[:isbn] = "1111122222"
         params[:total_pages] = 100
-        params[:categories] = "frontend,cicd" # カンマ区切り
+        params[:categories] = ["frontend", "cicd"] # カンマ区切り
       end
 
       it "登録が成功すること" do
@@ -138,7 +138,7 @@ RSpec.describe "API::V1::Books", type: :request do
         p[:isbn] = "1111122222"
         p[:completed] = "false"
         p[:total_pages] = 100
-        p[:categories] = "frontend,cicd" # カンマ区切り
+        p[:categories] = ["frontend", "cicd"] # カンマ区切り
         post "api/v1/users/books", headers: headers, params: p
         
         params[:isbn] = "1111122222"
