@@ -1,37 +1,74 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { logout } from "@/utils/auth-utils";
+import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { logout } from "@/utils/auth-utils";
 
 export const Sidebar = () => {
   const [showLogout, setShowLogout] = useState(false);
-
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const { user_name } = useParams();
 
   const handleLogout = async () => {
     try {
       await logout();
-      router.push("/"); // ログアウト成功時にリダイレクト
+      setShowLogout(false);
+      router.push("/");
     } catch (error) {
       console.error("ログアウトに失敗しました", error);
     }
   };
 
+  const handleUserIconClick = () => {
+    // If sidebar is collapsed, open it
+    if (isCollapsed) {
+      setIsCollapsed(false);
+    }
+    // Toggle logout button visibility
+    setShowLogout(!showLogout);
+  };
+
+  useEffect(() => {
+    if (!user_name) {
+      setShowLogout(false);
+    }
+  }, [user_name]);
+
   return (
     <div
-      className="d-flex flex-column flex-shrink-0 p-3 position-relative"
+      className={
+        "d-flex flex-column flex-shrink-0 p-3 position-relative transition-all"
+      }
       style={{
-        width: "250px",
+        width: isCollapsed ? "80px" : "250px",
         minHeight: "100vh",
         backgroundColor: "#249474",
         overflowY: "auto",
+        transition: "width 0.3s ease-in-out",
       }}
     >
-      <h3 className="text-center mb-3 text-white">
+      {/* 折りたたみトグルボタン */}
+      <button
+        className="btn btn-light position-absolute"
+        style={{
+          top: "10px",
+          right: isCollapsed ? "10px" : "-20px",
+          zIndex: 1000,
+          transition: "right 0.3s ease-in-out",
+        }}
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
+        <span className="material-symbols-outlined">
+          {isCollapsed ? "chevron_right" : "chevron_left"}
+        </span>
+      </button>
+
+      <h3
+        className={`text-center mb-3 text-white ${isCollapsed ? "d-none" : ""}`}
+      >
         <Link
           href={user_name ? `/${user_name}` : "/"}
           className="text-white text-decoration-none"
@@ -39,51 +76,66 @@ export const Sidebar = () => {
           HackBook
         </Link>
       </h3>
-      <ul className="nav nav-pills flex-column mb-auto">
+
+      <ul
+        className="nav nav-pills flex-column mb-auto"
+        style={{
+          marginTop: isCollapsed ? "50px" : "0", // Add margin when collapsed
+          transition: "margin-top 0.3s ease-in-out",
+        }}
+      >
         {user_name ? (
           <>
             <li className="nav-item">
               <Link
                 href={`/${user_name}/add_book`}
-                className="nav-link text-white d-flex align-items-center hover-element"
+                className={`nav-link text-white d-flex align-items-center hover-element ${
+                  isCollapsed ? "justify-content-center" : ""
+                }`}
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   book
                 </span>
-                本を追加
+                {!isCollapsed && "本を追加"}
               </Link>
             </li>
             <li>
               <Link
                 href={`/${user_name}/books`}
-                className="nav-link text-white d-flex align-items-center hover-element"
+                className={`nav-link text-white d-flex align-items-center hover-element ${
+                  isCollapsed ? "justify-content-center" : ""
+                }`}
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   menu_book
                 </span>
-                本を見る
+                {!isCollapsed && "本を見る"}
               </Link>
             </li>
             <li>
               <Link
                 href={`/${user_name}/reading_logs`}
-                className="nav-link text-white d-flex align-items-center hover-element"
+                className={`nav-link text-white d-flex align-items-center hover-element ${
+                  isCollapsed ? "justify-content-center" : ""
+                }`}
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   history_edu
                 </span>
-                読書ログを見る
+                {!isCollapsed && "読書ログを見る"}
               </Link>
             </li>
             <li>
               <Link
                 href={`/${user_name}/exp_logs`}
-                className="nav-link text-white d-flex align-items-center hover-element"
+                className={`nav-link text-white d-flex align-items-center hover-element ${
+                  isCollapsed ? "justify-content-center" : ""
+                }`}
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   military_tech
                 </span>
-                レベルを見る
+                {!isCollapsed && "レベルを見る"}
               </Link>
             </li>
           </>
@@ -92,40 +144,46 @@ export const Sidebar = () => {
             <li>
               <Link
                 href="/login"
-                className="nav-link text-white d-flex align-items-center hover-element"
+                className={`nav-link text-white d-flex align-items-center hover-element ${
+                  isCollapsed ? "justify-content-center" : ""
+                }`}
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   login
                 </span>
-                ログイン
+                {!isCollapsed && "ログイン"}
               </Link>
             </li>
             <li>
               <Link
                 href="/signup"
-                className="nav-link text-white d-flex align-items-center hover-element"
+                className={`nav-link text-white d-flex align-items-center hover-element ${
+                  isCollapsed ? "justify-content-center" : ""
+                }`}
               >
                 <span className="material-symbols-outlined fs-5 me-2">
                   person_add
                 </span>
-                新規登録
+                {!isCollapsed && "新規登録"}
               </Link>
             </li>
           </>
         )}
       </ul>
 
-      {/* ユーザーアイコンとログアウトボタン（ログイン時のみ表示） */}
+      {/* ユーザーアイコン（下部に固定） */}
       {user_name && (
         <div
           className="position-absolute d-flex align-items-center"
           style={{
-            bottom: "10px",
-            left: "50%",
-            transform: "translateX(-50%)",
+            bottom: "5px",
+            left: isCollapsed ? "10px" : "50%",
+            transform: isCollapsed ? "none" : "translateX(-50%)",
             cursor: "pointer",
+            transition: "left 0.3s ease-in-out, bottom 0.3s ease-in-out",
+            marginBottom: isCollapsed ? "40px" : "0",
           }}
-          onClick={() => setShowLogout(!showLogout)}
+          onClick={handleUserIconClick}
         >
           <Image
             src="/bird_fukurou_run.png"
@@ -137,18 +195,19 @@ export const Sidebar = () => {
         </div>
       )}
 
-      {/* ログアウトボタン（ログイン時のみ表示） */}
+      {/* ログアウトボタン */}
       {user_name && showLogout && (
         <button
           className="position-absolute btn btn-danger d-flex align-items-center justify-content-center"
           style={{
             bottom: "10px",
-            left: "calc(50% + 80px)",
-            transform: "translateX(-50%)",
+            left: isCollapsed ? "60px" : "calc(50% + 80px)",
+            transform: isCollapsed ? "none" : "translateX(-50%)",
             width: "40px",
             height: "40px",
             borderRadius: "50%",
             padding: "5px",
+            transition: "left 0.3s ease-in-out",
           }}
           onClick={handleLogout}
         >
