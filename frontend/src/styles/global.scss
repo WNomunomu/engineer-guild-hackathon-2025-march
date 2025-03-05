@@ -41,3 +41,23 @@
   border-color: var(--secondary-color) !important;
   box-shadow: 0 0 0 0.25rem var(--tertiary-color) !important;
 }
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.hover-element:hover {
+  opacity: 0.8;
+}
