@@ -5,8 +5,6 @@ import { Sidebar } from "@/components/Sidebar";
 import "../styles/global.scss";
 import { Lora } from "next/font/google";
 
-const lora = Lora({ subsets: ["latin"] });
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -15,6 +13,11 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const lora = Lora({
+  subsets: ["latin"],
+  variable: "--font-lora",
 });
 
 export const metadata: Metadata = {
@@ -31,17 +34,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        {/* eslint-disable-next-line @next/next/no-page-custom-font, @next/next/google-font-display */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=optional"
           rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,-25..0"
         />
       </head>
       <body
         className={`
           ${geistSans.variable} 
           ${geistMono.variable} 
-          ${lora.className}
+          ${lora.variable}
           d-flex 
           overflow-hidden 
           vh-100
