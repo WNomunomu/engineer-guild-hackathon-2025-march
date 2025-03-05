@@ -16,7 +16,7 @@ export const useExpLogs = () => {
   const { data, error, isLoading } = useSWR("/users/exp_logs", apiV1Get);
 
   return {
-    expLogs: data,
+    data,
     isLoading,
     isError: error,
   };
