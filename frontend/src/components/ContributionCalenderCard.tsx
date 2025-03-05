@@ -76,7 +76,7 @@ export const ContributionCalenderCard = () => {
   }, []);
 
   // Handle year button clicks
-  const handleYearClick = (year) => {
+  const handleYearClick = (year: string) => {
     const newStartDate = `${year}-01-01`;
     const newEndDate = `${year}-12-31`;
     setStartDate(newStartDate);
