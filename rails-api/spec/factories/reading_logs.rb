@@ -3,8 +3,9 @@
 # Table name: reading_logs
 #
 #  id         :bigint           not null, primary key
-#  pages_read :integer
+#  end_page   :integer          not null
 #  read_at    :date
+#  start_page :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  book_id    :bigint           not null
