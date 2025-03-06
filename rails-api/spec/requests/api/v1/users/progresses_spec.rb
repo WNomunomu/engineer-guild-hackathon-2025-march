@@ -12,7 +12,7 @@ RSpec.describe "Api::V1::User::Progresses", type: :request do
         header["uid"] = res["uid"]
         user = User.find_by(email: "a@a.com")
 
-        User.find_by(email: "a@a.com").reading_logs.create!(pages_read: 10, read_at: Date.today, book: create(:book, user: User.find_by(email: "a@a.com")))
+        User.find_by(email: "a@a.com").reading_logs.create!(start_page: 1, end_page: 10, read_at: Date.today, book: create(:book, user: User.find_by(email: "a@a.com")))
         User.find_by(email: "a@a.com").exp_logs.create!(exp_points: 10, earned_at: Date.today, category: create(:category))
       end
       it "進捗が取得できること" do

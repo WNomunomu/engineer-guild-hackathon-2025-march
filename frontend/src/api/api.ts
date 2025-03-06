@@ -38,6 +38,7 @@ export const apiV1Post = async (url: string, data = {}) => {
   } catch (error) {
     // AxiosError 型を指定
     if (error instanceof AxiosError) {
+      console.log(error.response?.data?.errors);
       throw new Error(error.response?.data?.errors);
     } else {
       throw new Error("An unexpected error occurred");

@@ -39,12 +39,13 @@ export const SubmitReadingLogsModal = () => {
       }
 
       const formData = {
-        isbn: selectedBook.isbn,
+        id: selectedBook.id,
         read_at: readAt,
         pages_read: parseInt(pagesRead || "0", 10),
       };
 
       console.log(formData);
+      // console.log(selectedBook.current_page)
 
       const response = await apiV1Post("/users/reading_logs", formData);
 
@@ -100,10 +101,10 @@ export const SubmitReadingLogsModal = () => {
             </label>
             <select
               id="bookSelect"
-              value={selectedBook?.isbn || ""}
+              value={selectedBook?.id || ""}
               onChange={(e) => {
                 const selected = books.find(
-                  (book) => book.isbn === e.target.value
+                  (book) => book.id === parseInt(e.target.value)
                 );
                 setSelectedBook(selected || null);
               }}
@@ -111,7 +112,7 @@ export const SubmitReadingLogsModal = () => {
             >
               <option value="">本を選択</option>
               {books.map((book) => (
-                <option key={book.isbn} value={book.isbn}>
+                <option key={book.id} value={book.id}>
                   {book.title}
                 </option>
               ))}

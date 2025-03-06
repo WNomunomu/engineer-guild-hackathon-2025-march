@@ -3,8 +3,9 @@
 # Table name: reading_logs
 #
 #  id         :bigint           not null, primary key
-#  pages_read :integer
+#  end_page   :integer          not null
 #  read_at    :date
+#  start_page :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  book_id    :bigint           not null
@@ -25,5 +26,11 @@ class ReadingLog < ApplicationRecord
   belongs_to :book
 
   validates :read_at, presence: true
-  validates :pages_read, presence: true, numericality: { greater_than: 0 }
+  validates :start_page, presence: true, numericality: { greater_than: 0 }
+  validates :end_page, presence: true, numericality: { greater_than_or_equal_to: :start_page }
+
+  def pages_read
+    # 読んだページ数は、最初のページと最後のページの差に 1 を足す必要があるため
+    end_page - start_page + 1
+  end
 end

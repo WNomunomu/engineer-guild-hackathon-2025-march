@@ -3,8 +3,9 @@
 # Table name: reading_logs
 #
 #  id         :bigint           not null, primary key
-#  pages_read :integer
+#  end_page   :integer          not null
 #  read_at    :date
+#  start_page :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  book_id    :bigint           not null
@@ -24,6 +25,5 @@ FactoryBot.define do
   factory :reading_log do
     book
     read_at { Faker::Date.between(from: 1.year.ago, to: Date.today) }
-    pages_read { 1 }
   end
 end

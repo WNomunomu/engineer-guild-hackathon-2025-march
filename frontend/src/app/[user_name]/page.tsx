@@ -75,8 +75,10 @@ export default function UserHome() {
           </button>
         </div>
       </div>
-      <AchievementCardList />
-      <div className="d-flex row mb-3">
+      <div className="mt-4">
+        <AchievementCardList />
+      </div>
+      <div className="d-flex row mt-4">
         <div
           className="col-8"
           onClick={() => router.push(`/${user_name}/exp_logs`)}
@@ -90,10 +92,10 @@ export default function UserHome() {
           />
         </div>
       </div>
-      <div className="mb-3">
+      <div className="mt-4">
         <ContributionCalenderCard />
       </div>
-      <div className="mb-3">
+      <div className="mt-4 mb-4">
         <BooksListCard />
       </div>
     </div>

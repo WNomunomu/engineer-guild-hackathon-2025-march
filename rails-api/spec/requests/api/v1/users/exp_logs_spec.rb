@@ -25,9 +25,9 @@ RSpec.describe "Api::V1::User::ExpLogs", type: :request do
         book.categories << category2
         book
       end
-      let!(:reading_log1) { create :reading_log, book: book1, user: user , pages_read: 100}
-      let!(:reading_log2) { create :reading_log, book: book1, user: user , pages_read: 200}
-      let!(:reading_log3) { create :reading_log, book: book2, user: user , pages_read: 200}
+      let!(:reading_log1) { create :reading_log, book: book1, user: user , start_page: 1 , end_page: 100}
+      let!(:reading_log2) { create :reading_log, book: book1, user: user , start_page: 1 , end_page: 200}
+      let!(:reading_log3) { create :reading_log, book: book2, user: user , start_page: 1 , end_page: 200}
 
       let(:expected_body) do
         [

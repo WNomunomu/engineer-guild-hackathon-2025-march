@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_02_080818) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_06_083516) do
   create_table "book_categories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "book_id", null: false
     t.bigint "category_id", null: false
@@ -23,7 +23,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_080818) do
   create_table "books", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.string "author"
-    t.string "image_id"
     t.integer "total_pages"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -31,6 +30,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_080818) do
     t.bigint "user_id", null: false
     t.boolean "completed", default: false
     t.integer "current_pages", default: 0
+    t.string "image_url"
     t.index ["user_id"], name: "index_books_on_user_id"
   end
 
@@ -56,9 +56,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_080818) do
     t.bigint "user_id", null: false
     t.bigint "book_id", null: false
     t.date "read_at"
-    t.integer "pages_read"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "start_page", null: false
+    t.integer "end_page", null: false
     t.index ["book_id"], name: "index_reading_logs_on_book_id"
     t.index ["user_id"], name: "index_reading_logs_on_user_id"
   end
