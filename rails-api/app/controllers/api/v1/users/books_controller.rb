@@ -57,6 +57,7 @@ module Api
               isbn: params[:isbn], 
               total_pages: params[:total_pages], 
               completed: params[:completed], 
+              image_url: params[:image_url], 
               user: current_api_v1_user, 
               title: params[:title], 
               author: params[:author]
