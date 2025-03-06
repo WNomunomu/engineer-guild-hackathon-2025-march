@@ -57,6 +57,7 @@ module Api
               isbn: params[:isbn], 
               total_pages: params[:total_pages], 
               completed: params[:completed], 
+              image_url: params[:image_url], 
               user: current_api_v1_user, 
               title: params[:title], 
               author: params[:author]
@@ -96,12 +97,16 @@ module Api
 
         def index
           @user = current_api_v1_user
-          books = @user.books
-          render json: books
+          # # binding.pry
+          # books = @user.books.joins(:categories).group('books.id')
+          # books.map do |book|
+          #   # binding.pry
+          # end
+          render json: @user.books
         end
 
         def destroy
-          book = Book.find_by!(isbn: params[:isbn])
+          book = Book.find_by!(id: params[:id])
           begin
             book.destroy!
           rescue ActiveRecord::RecordNotFound

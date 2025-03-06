@@ -35,7 +35,7 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
   describe "POST /api/v1/users/reading_logs" do
     describe "成功時" do
       it "読書履歴が登録できること" do
-        post "api/v1/users/reading_logs", headers: header, params: { isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, read_at: "2025-03-04", pages_read: 10 }
+        post "api/v1/users/reading_logs", headers: header, params: { id: create(:book, user: User.find_by(email: "a@a.com")).id, read_at: "2025-03-04", pages_read: 10 }
         expect(response).to have_http_status(201)
         expect(User.find_by(email: "a@a.com").reading_logs.count).to eq(1)
       end
