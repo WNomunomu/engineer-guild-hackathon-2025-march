@@ -56,9 +56,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_083516) do
     t.bigint "user_id", null: false
     t.bigint "book_id", null: false
     t.date "read_at"
-    t.integer "pages_read"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "start_page", null: false
+    t.integer "end_page", null: false
     t.index ["book_id"], name: "index_reading_logs_on_book_id"
     t.index ["user_id"], name: "index_reading_logs_on_user_id"
   end

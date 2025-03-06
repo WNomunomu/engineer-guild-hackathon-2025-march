@@ -5,20 +5,19 @@ module Api
         before_action :authenticate_api_v1_user!
 
         def index
-          # current_user の reading_logs からカテゴリごとの合計ページ数を取得
-          category_pages = current_api_v1_user.reading_logs
-            .joins(book: :categories)
-            .group('categories.id', 'categories.category')
-            .pluck(
-              'categories.id',
-              'categories.category',
-              Arel.sql('COALESCE(SUM(reading_logs.pages_read), 0)')
-            )
+          reading_logs = current_api_v1_user.reading_logs.includes(book: :categories)
         
-          # pluck は配列で返ってくるので、そのまま map で整形
-          response_data = category_pages.map do |category_id, category_name, pages_read|
+          # カテゴリごとにグループ化してpages_readを合計
+          category_pages = Hash.new(0)
+          reading_logs.each do |log|
+            log.book.categories.each do |category|
+              category_pages[category] += log.pages_read
+            end
+          end
+        
+          response_data = category_pages.map do |category, pages_read|
             {
-              category: category_name,
+              category: category.category,
               level: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(0),
               exp: pages_read,
             }

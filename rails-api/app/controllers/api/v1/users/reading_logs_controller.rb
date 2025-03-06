@@ -12,7 +12,12 @@ module Api
             return
           end
 
-          reading_log = current_api_v1_user.reading_logs.create(read_at: reading_log_params[:read_at], pages_read: reading_log_params[:pages_read], book: book)
+          reading_log = current_api_v1_user.reading_logs.create(
+            read_at: reading_log_params[:read_at], 
+            start_page: reading_log_params[:start_page], 
+            end_page: reading_log_params[:end_page], 
+            book: book
+          )
           if reading_log.persisted?
             render json: { message: 'Reading log saved', log: reading_log }, status: :created
           else
@@ -26,19 +31,26 @@ module Api
         end
 
         def retrieve_by_date
-          grouped_and_accumulated_logs = current_api_v1_user.reading_logs.where(read_at: params[:startDate].to_date..params[:endDate].to_date).group(:read_at).pluck(
-            :read_at,
-            Arel.sql('COALESCE(SUM(reading_logs.pages_read), 0)')
-          )
-          response_data = grouped_and_accumulated_logs.map do |read_date, pages_read|
-            formatted_date = read_date.strftime('%Y-%m-%d')
-            { formatted_date => { level: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(0) } }
+          logs = current_api_v1_user.reading_logs.where(read_at: params[:startDate].to_date..params[:endDate].to_date)
+        
+          grouped_logs = logs.group_by(&:read_at).transform_values do |daily_logs|
+            daily_logs.sum(&:pages_read)
           end
+        
+          response_data = grouped_logs.map do |read_date, pages_read|
+            formatted_date = read_date.strftime('%Y-%m-%d')
+            {
+              formatted_date => {
+                level: (pages_read * AppConstants::EXP_RATE_PER_READ_PAGE).round(0)
+              }
+            }
+          end
+        
           render json: response_data
         end
 
         def reading_log_params
-          params.permit(:id, :read_at, :pages_read)
+          params.permit(:id, :read_at, :start_page, :end_page)
         end
       end
     end
