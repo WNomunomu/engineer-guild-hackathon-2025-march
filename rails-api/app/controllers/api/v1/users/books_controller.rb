@@ -96,8 +96,12 @@ module Api
 
         def index
           @user = current_api_v1_user
-          books = @user.books
-          render json: books
+          # # binding.pry
+          # books = @user.books.joins(:categories).group('books.id')
+          # books.map do |book|
+          #   # binding.pry
+          # end
+          render json: @user.books
         end
 
         def destroy

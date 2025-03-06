@@ -6,7 +6,7 @@ module Api
 
         def create
           begin
-            book = Book.find_by(isbn: reading_log_params[:isbn])
+            book = Book.find(reading_log_params[:id])
           rescue ActiveRecord::RecordNotFound 
             render json: { error: 'Book not found' }, status: :unprocessable_entity
             return
@@ -38,7 +38,7 @@ module Api
         end
 
         def reading_log_params
-          params.permit(:isbn, :read_at, :pages_read)
+          params.permit(:id, :read_at, :pages_read)
         end
       end
     end
