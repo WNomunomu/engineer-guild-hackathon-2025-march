@@ -116,12 +116,12 @@ RSpec.describe "API::V1::Books", type: :request do
     end
   end
   
-  describe "DELETE api/v1/users/books/:isbn" do
-    subject { delete "api/v1/users/books/#{params[:isbn]}", headers: headers }
+  describe "DELETE api/v1/users/books/:id" do
+    subject { delete "api/v1/users/books/#{params[:id]}", headers: headers }
     describe "認証できないとき" do
       before do
         book = create(:book, user: User.first)
-        params[:isbn] = book.isbn
+        params[:id] = book.id
         headers["client"] = ""
       end
 
@@ -141,7 +141,7 @@ RSpec.describe "API::V1::Books", type: :request do
         p[:categories] = ["frontend", "cicd"] # カンマ区切り
         post "api/v1/users/books", headers: headers, params: p
         
-        params[:isbn] = "1111122222"
+        params[:id] = Book.first.id
       end
       it "登録が外れ、正しいhttp status が返ってくる" do
         subject

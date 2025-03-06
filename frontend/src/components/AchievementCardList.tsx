@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+
+import { useBooks } from "@/hooks/useBooks";
 
 type AchievementCardProps = {
   icon: string;
@@ -21,12 +24,13 @@ export const AchievementCard = (props: AchievementCardProps) => {
 };
 
 export const AchievementCardList = () => {
+  const { books, isLoading, isError } = useBooks();
   return (
     <div className="row g-3">
       <div className="col-12 col-sm-6 col-md-4 col-lg-2">
         <AchievementCard
           icon="menu_book"
-          achievement="12"
+          achievement={books?.filter((book) => book.completed === true)?.length.toString() || "0"}
           category="累計読破数"
         />
       </div>

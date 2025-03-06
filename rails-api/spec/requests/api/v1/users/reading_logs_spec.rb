@@ -47,7 +47,7 @@ RSpec.describe "Api::V1::Users::ReadingLogs", type: :request do
     describe "成功時" do
       it "読書履歴が登録できること" do
         post "api/v1/users/reading_logs", headers: header, params: { 
-          isbn: create(:book, user: User.find_by(email: "a@a.com")).isbn, 
+          id: create(:book, user: User.find_by(email: "a@a.com")).id, 
           read_at: "2025-03-04", 
           start_page: 1,
           end_page: 10

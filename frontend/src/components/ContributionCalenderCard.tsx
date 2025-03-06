@@ -89,34 +89,39 @@ export const ContributionCalenderCard = () => {
     <div className="card">
       <div className="card-body">
         <div className="d-flex row w-100">
+            <div>
+              <h5 className="mb-3">{(new Date(startDate)).getFullYear()} Reading Logs</h5>
+            </div>
           <div className="col-10 d-flex" ref={containerRef}>
             {isLoading ? (
               <div>Loading...</div>
             ) : isError ? (
               <div>Error loading data</div>
             ) : (
-              <ContributionCalendar
-                data={normalizedData}
-                dateOptions={{
-                  start: startDate,
-                  end: endDate,
-                  startsOnSunday: true,
-                  includeBoundary: true,
-                }}
-                styleOptions={{
-                  theme: "grass",
-                  cr: 2,
-                  cx: cellSize.cx,
-                  cy: cellSize.cy,
-                  style: {
-                    width: "100%",
-                    height: "100%",
-                    display: "block",
-                    maxWidth: "100%",
-                  },
-                }}
-                scroll={false}
-              />
+              <>
+                <ContributionCalendar
+                  data={normalizedData}
+                  dateOptions={{
+                    start: startDate,
+                    end: endDate,
+                    startsOnSunday: true,
+                    includeBoundary: true,
+                  }}
+                  styleOptions={{
+                    theme: "grass",
+                    cr: 2,
+                    cx: cellSize.cx,
+                    cy: cellSize.cy,
+                    style: {
+                      width: "100%",
+                      height: "100%",
+                      display: "block",
+                      maxWidth: "100%",
+                    },
+                  }}
+                  scroll={false}
+                />
+              </>
             )}
           </div>
           <div className="col-2 d-flex flex-column">
