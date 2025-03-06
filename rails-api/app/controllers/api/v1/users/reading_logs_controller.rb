@@ -12,7 +12,12 @@ module Api
             return
           end
 
-          reading_log = current_api_v1_user.reading_logs.create(read_at: reading_log_params[:read_at], pages_read: reading_log_params[:pages_read], book: book)
+          reading_log = current_api_v1_user.reading_logs.create(
+            read_at: reading_log_params[:read_at], 
+            start_page: reading_log_params[:start_page], 
+            end_page: reading_log_params[:end_page], 
+            book: book
+          )
           if reading_log.persisted?
             render json: { message: 'Reading log saved', log: reading_log }, status: :created
           else
@@ -38,7 +43,7 @@ module Api
         end
 
         def reading_log_params
-          params.permit(:isbn, :read_at, :pages_read)
+          params.permit(:isbn, :read_at, :start_page, :end_page)
         end
       end
     end
