@@ -69,11 +69,11 @@ export default function AddBook() {
   const [offsetsUnread, setOffsetsUnread] = useState<number[]>([]);
 
   const totalPagesNew = bookDataArrayNew.reduce(
-    (sum, book) => sum + book.totalPage,
+    (sum, book) => sum + (book.totalPage || 0),
     0
   );
   const totalPagesUnread = (bookDataArrayUnread || []).reduce(
-    (sum, book) => sum + book.totalPage,
+    (sum, book) => sum + (book.totalPage || 0),
     0
   );
   const totalPagesSum = Math.floor((totalPagesNew + totalPagesUnread) * 0.1);
