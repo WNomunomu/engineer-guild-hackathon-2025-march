@@ -2,7 +2,7 @@
 import axios, { AxiosError } from "axios";
 import { getAuthHeaders } from "@/utils/auth-utils";
 
-const API_BASE_URL = process.env.API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
