@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSubmitReadingLogsModal } from "@/utils/modal";
 import type { Book } from "@/hooks/useBooks";
 import { useBooks } from "@/hooks/useBooks";
+import { apiV1Delete } from "@/api/api";
 
 export default function BookDetail() {
   const { bookId } = useParams();
@@ -13,6 +14,10 @@ export default function BookDetail() {
   const { books, isLoading, isError } = useBooks();
   const book = books?.find((book: Book) => book.id === numericBookId);
   console.log(`book.image_url: ${book?.image_url}`);
+
+  const handleDeleteButton = async() => {
+    await apiV1Delete(`/users/books/${book?.id}`);
+  }
 
   const { open } = useSubmitReadingLogsModal();
   return (
@@ -81,6 +86,14 @@ export default function BookDetail() {
                       onClick={open}
                     >
                       進捗を追加
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-original"
+                      style={{ marginLeft: "5px" }}
+                      onClick={handleDeleteButton}
+                    >
+                      削除
                     </button>
                   </div>
                 </div>

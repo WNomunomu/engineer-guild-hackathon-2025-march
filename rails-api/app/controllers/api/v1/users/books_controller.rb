@@ -106,7 +106,7 @@ module Api
         end
 
         def destroy
-          book = Book.find_by!(isbn: params[:isbn])
+          book = Book.find_by!(id: params[:id])
           begin
             book.destroy!
           rescue ActiveRecord::RecordNotFound
