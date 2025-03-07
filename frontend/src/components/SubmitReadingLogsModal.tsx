@@ -3,7 +3,7 @@ import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { apiV1Post } from "@/api/api";
 
-import { useBooks, type Book } from "@/hooks/useBooks";
+import { useBooks, useReadingProgress, type Book } from "@/hooks/useBooks";
 
 type SubmitReadingLogsModalProps = {
   alreadySelectedBook?: Book;
@@ -26,6 +26,10 @@ export const SubmitReadingLogsModal = (props: SubmitReadingLogsModalProps) => {
 
   const { books } = useBooks();
 
+  const { mutate: mutateReadingProgress } = useReadingProgress(
+    selectedBook?.id ?? 0
+  );
+
   if (books == null) return <></>;
 
   const isOpened = data?.isOpened ?? false;
@@ -47,6 +51,16 @@ export const SubmitReadingLogsModal = (props: SubmitReadingLogsModalProps) => {
         throw new Error("読んだページ数を入力してください");
       }
 
+      if (parseInt(startPage) < 1) {
+        throw new Error("開始ページ番号は0以上を入力してください");
+      }
+
+      if (parseInt(endPage) > selectedBook.total_pages) {
+        throw new Error(
+          "終了ページは選択した本の最後のページ番号よりも小さい数字を入力してください"
+        );
+      }
+
       const formData = {
         id: selectedBook.id,
         read_at: readAt,
@@ -57,17 +71,7 @@ export const SubmitReadingLogsModal = (props: SubmitReadingLogsModalProps) => {
       console.log(formData);
       // console.log(selectedBook.current_page)
 
-      const response = await apiV1Post("/users/reading_logs", formData);
-
-      // if (!response.ok) {
-      //   const errorData = await response.json();
-      //   throw new Error(errorData.message || "読書履歴の登録に失敗しました");
-      // }
-
-      console.log(response);
-
-      // const responseData = await response.json();
-      // console.log(responseData);
+      await apiV1Post("/users/reading_logs", formData);
 
       setSuccess(true);
 
@@ -80,6 +84,10 @@ export const SubmitReadingLogsModal = (props: SubmitReadingLogsModalProps) => {
         setSuccess(false);
         close();
       }, 1500);
+
+      mutateReadingProgress();
+
+      close();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

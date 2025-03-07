@@ -7,21 +7,35 @@ import type { Book } from "@/hooks/useBooks";
 import { useReadingProgress, useBooks } from "@/hooks/useBooks";
 import { apiV1Delete } from "@/api/api";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
+import { useRouter } from "next/navigation";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function BookDetail() {
   const { bookId } = useParams();
   const numericBookId = Number(bookId);
 
-  const { books, isLoading, isError } = useBooks();
+  const { books, isLoading, isError, mutate: mutateBooks } = useBooks();
   const book = books?.find((book: Book) => book.id === numericBookId);
   console.log(`book.image_url: ${book?.image_url}`);
 
   const { data: readingProgress } = useReadingProgress(numericBookId);
+  const { user } = useCurrentUser();
 
-  console.log(readingProgress);
+  const router = useRouter();
 
   const handleDeleteButton = async () => {
+    const isConfirmed = window.confirm("本当に削除してもよろしいですか？");
+
+    // キャンセルされた場合は処理を中止
+    if (!isConfirmed) {
+      return;
+    }
+
     await apiV1Delete(`/users/books/${book?.id}`);
+
+    mutateBooks();
+
+    router.push(`/${user?.name}/books`);
   };
 
   const { open } = useSubmitReadingLogsModal();
@@ -110,11 +124,11 @@ export default function BookDetail() {
                     </button>
                     <button
                       type="button"
-                      className="btn btn-original"
+                      className="btn btn-danger"
                       style={{ marginLeft: "5px" }}
                       onClick={handleDeleteButton}
                     >
-                      削除
+                      本を本棚から削除
                     </button>
                   </div>
                 </div>
