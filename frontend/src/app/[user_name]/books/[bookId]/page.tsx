@@ -2,7 +2,10 @@
 
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { useSubmitReadingLogsModal } from "@/utils/modal";
+import {
+  useSubmitReadingLogsModal,
+  useUpdateBookDetailModal,
+} from "@/utils/modal";
 import type { Book } from "@/hooks/useBooks";
 import { useReadingProgress, useBooks } from "@/hooks/useBooks";
 import { apiV1Delete } from "@/api/api";
@@ -37,7 +40,8 @@ export default function BookDetail() {
     router.push(`/${user?.name}/books`);
   };
 
-  const { open } = useSubmitReadingLogsModal();
+  const { open: openSubmitReadingLogsModal } = useSubmitReadingLogsModal();
+  const { open: openUpdateBookDetailModal } = useUpdateBookDetailModal();
 
   return (
     <div className="container mt-5">
@@ -116,26 +120,35 @@ export default function BookDetail() {
 
                     <div className="mb-4">
                       <strong>本の進捗</strong>
-                      <ReadingProgressBar
-                        readingProgress={readingProgress}
-                        total_pages={book.total_pages}
-                      />
+                      <div className="mt-2">
+                        <ReadingProgressBar
+                          readingProgress={readingProgress}
+                          total_pages={book.total_pages}
+                        />
+                      </div>
                     </div>
 
                     <button
                       type="button"
-                      className="btn btn-original"
-                      onClick={open}
+                      className="btn btn-original mt-2"
+                      onClick={openSubmitReadingLogsModal}
                     >
                       進捗を追加
                     </button>
                     <button
                       type="button"
-                      className="btn btn-danger"
-                      style={{ marginLeft: "5px" }}
+                      className="btn btn-danger ms-1 mt-2"
                       onClick={handleDeleteButton}
                     >
                       本を本棚から削除
+                    </button>
+                    {/* TODO このボタンを押したら本の情報を更新できるモーダルが出る */}
+                    <button
+                      type="button"
+                      className="btn btn-primary ms-1 mt-2"
+                      onClick={openUpdateBookDetailModal}
+                    >
+                      本の情報を更新する
                     </button>
                   </div>
                 </div>
