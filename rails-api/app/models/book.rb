@@ -25,9 +25,9 @@
 class Book < ApplicationRecord
   has_many :book_categories, dependent: :destroy
   has_many :categories, through: :book_categories
-  has_many :user_books
+  has_many :user_books, dependent: :destroy
   belongs_to :user
-  has_many :reading_logs
+  has_many :reading_logs, dependent: :destroy
 
   # has_one_attached :image
 
