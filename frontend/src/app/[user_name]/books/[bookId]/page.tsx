@@ -16,7 +16,6 @@ export default function BookDetail() {
 
   const { books, isLoading, isError, mutate: mutateBooks } = useBooks();
   const book = books?.find((book: Book) => book.id === numericBookId);
-  console.log(`book.image_url: ${book?.image_url}`);
 
   const { data: readingProgress } = useReadingProgress(numericBookId);
   const { user } = useCurrentUser();
@@ -83,6 +82,11 @@ export default function BookDetail() {
                   </div>
                   <div className="col-md-6 col-12">
                     <h2 className="card-title text-dark mb-3">{book.title}</h2>
+                    {book.completed && (
+                      <p className="card-text mb-2">
+                        <span className="badge bg-success">既読</span>
+                      </p>
+                    )}
                     <p className="card-text mb-2">
                       <strong>著者:</strong> {book.author}
                     </p>
