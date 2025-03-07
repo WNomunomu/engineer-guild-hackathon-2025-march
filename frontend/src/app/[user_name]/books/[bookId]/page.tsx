@@ -4,8 +4,9 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { useSubmitReadingLogsModal } from "@/utils/modal";
 import type { Book } from "@/hooks/useBooks";
-import { useBooks } from "@/hooks/useBooks";
+import { useReadingProgress, useBooks } from "@/hooks/useBooks";
 import { apiV1Delete } from "@/api/api";
+import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 
 export default function BookDetail() {
   const { bookId } = useParams();
@@ -15,11 +16,16 @@ export default function BookDetail() {
   const book = books?.find((book: Book) => book.id === numericBookId);
   console.log(`book.image_url: ${book?.image_url}`);
 
-  const handleDeleteButton = async() => {
+  const { data: readingProgress } = useReadingProgress(numericBookId);
+
+  console.log(readingProgress);
+
+  const handleDeleteButton = async () => {
     await apiV1Delete(`/users/books/${book?.id}`);
-  }
+  };
 
   const { open } = useSubmitReadingLogsModal();
+
   return (
     <div className="container mt-5">
       <h1 className="text-center mt-4 mb-4">本の詳細</h1>
@@ -74,12 +80,27 @@ export default function BookDetail() {
                     <p className="card-text mb-2">
                       <strong>ページ数:</strong> {book.total_pages || "不明"}
                     </p>
-                    {/*
-                    <p className="card-text mb-4">
+                    <p className="card-text mb-2 d-flex">
                       <strong>カテゴリー:</strong>{" "}
-                      {bookData.summary.categories || "不明"}
+                      <div className="ms-1 d-flex">
+                        {book.categories == null ? (
+                          <div>不明</div>
+                        ) : (
+                          book.categories.map((category, index) => (
+                            <div key={index}>{category.category}</div>
+                          ))
+                        )}
+                      </div>
                     </p>
-                    */}
+
+                    <div className="mb-4">
+                      <strong>本の進捗</strong>
+                      <ReadingProgressBar
+                        readingProgress={readingProgress}
+                        total_pages={book.total_pages}
+                      />
+                    </div>
+
                     <button
                       type="button"
                       className="btn btn-original"
