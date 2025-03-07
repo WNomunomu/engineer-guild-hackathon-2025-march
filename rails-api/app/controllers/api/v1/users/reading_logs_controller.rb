@@ -70,6 +70,10 @@ module Api
         def calculate_total_pages(logs)
           logs.sum("end_page - start_page + 1")
         end
+
+        def calculate_total_exp(exp_logs)
+          exp_logs.sum("exp_points")
+        end
         
         def calculate_streak_days(logs)
           # 日付でグループ化して連続日数を計算
