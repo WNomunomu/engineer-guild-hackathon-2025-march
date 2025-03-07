@@ -21,3 +21,16 @@ export const useBooks = () => {
     isError: error,
   };
 };
+
+export const useReadingProgress = (bookId: number) => {
+  const { data, error, isLoading } = useSWR(
+    ["/users/books/reading_progress", bookId],
+    ([url, bookId]) => apiV1Get(url, { id: bookId })
+  );
+
+  return {
+    data,
+    isLoading,
+    error,
+  };
+};
