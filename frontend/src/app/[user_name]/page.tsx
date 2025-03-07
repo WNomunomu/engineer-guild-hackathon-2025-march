@@ -62,7 +62,9 @@ export default function UserHome() {
     <div className="container mt-5">
       <div className="d-flex">
         <div>
-          <h2>{user.name} のホーム</h2>
+          <h2 className="fw-bold bg-success bg-opacity-10 rounded text-center py-2 px-3">
+            {user.name} のホーム
+          </h2>
           <p>積読を減らして、経験値を貯めよう！！📚✨</p>
         </div>
         <div className="p-4 d-flex justify-content-center">
@@ -91,7 +93,7 @@ export default function UserHome() {
       <div className="mt-4">
         <ContributionCalenderCard />
       </div>
-      <div className="mt-4 mb-4">
+      <div className="mt-4 mb-5">
         <BooksListCard />
       </div>
     </div>

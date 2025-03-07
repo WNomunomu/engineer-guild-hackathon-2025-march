@@ -7,8 +7,12 @@ export default function Books() {
   const { user_name } = useParams();
   return (
     <div className="mt-5">
-      <h1 className="text-center mb-4 mt-4">{user_name} の本棚</h1>
-      <div className="mx-auto w-100 container">
+      <div className="container text-center mt-5 mb-4">
+        <div className="w-50 mx-auto bg-success bg-opacity-10 rounded py-4 px-3">
+          <h3 className="fw-bold">{user_name} の本棚</h3>
+        </div>
+      </div>
+      <div className="mx-auto w-100 mb-5 container">
         <BooksListCard />
       </div>
     </div>
