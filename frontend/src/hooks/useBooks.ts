@@ -13,17 +13,21 @@ export type Book = {
 };
 
 export const useBooks = () => {
-  const { data, error, isLoading } = useSWR<Book[]>("/users/books", apiV1Get);
+  const { data, error, isLoading, mutate } = useSWR<Book[]>(
+    "/users/books",
+    apiV1Get
+  );
 
   return {
     books: data,
     isLoading,
     isError: error,
+    mutate,
   };
 };
 
 export const useReadingProgress = (bookId: number) => {
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     ["/users/books/reading_progress", bookId],
     ([url, bookId]) => apiV1Get(url, { id: bookId })
   );
@@ -32,5 +36,6 @@ export const useReadingProgress = (bookId: number) => {
     data,
     isLoading,
     error,
+    mutate,
   };
 };
