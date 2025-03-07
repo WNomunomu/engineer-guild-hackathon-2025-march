@@ -78,11 +78,18 @@ export const BooksListCard = () => {
       <div className="card-body">
         <div className="mb-5">
           <div className="row mx-0">
-            {bookIdList?.map((id) => (
-              <div key={id} className="col-12 col-sm-6 col-md-4 col-lg-2 mt-4">
-                <BookThumbnail bookId={id} />
-              </div>
-            ))}
+            {bookIdList?.length == 0 ? (
+              <p className="text-center">本がまだ追加されていません。</p>
+            ) : (
+              bookIdList?.map((id) => (
+                <div
+                  key={id}
+                  className="col-12 col-sm-6 col-md-4 col-lg-2 mt-4"
+                >
+                  <BookThumbnail bookId={id} />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

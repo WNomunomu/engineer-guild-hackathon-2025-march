@@ -4,7 +4,7 @@ module Api
       class BooksController < ApplicationController
         before_action :authenticate_api_v1_user!
         def update
-          book = current_api_v1_user.books.find_by(isbn: params[:isbn])
+          book = current_api_v1_user.books.find_by(id: params[:id])
           if book.nil?
             render json: { error: 'Book not found' }, status: 422
             return
@@ -105,6 +105,14 @@ module Api
           render json: @user.books
         end
 
+        def reading_progress
+          book = Book.find_by!(id: params[:id])
+
+          reading_progress = calculate_reading_progress(book)
+
+          render json: reading_progress
+        end
+
         def destroy
           book = Book.find_by!(id: params[:id])
           begin
@@ -117,6 +125,27 @@ module Api
           end
 
           render json: { message: 'Book deleted successfully', book: book }, status: :ok
+        end
+        
+        private
+      
+        def calculate_reading_progress(book)
+          return [] unless book.total_pages.present? && book.total_pages > 0
+          
+          logs = current_api_v1_user.reading_logs.where(book_id: book.id)
+          
+          reading_progress = Array.new(book.total_pages, false)
+          
+          logs.each do |log|
+            start_p = [1, log.start_page.to_i].max
+            end_p = [log.end_page.to_i, book.total_pages].min
+            
+            (start_p..end_p).each do |page|
+              reading_progress[page - 1] = true
+            end
+          end
+          
+          reading_progress
         end
       end
     end

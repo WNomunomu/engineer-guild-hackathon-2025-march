@@ -22,7 +22,7 @@ module Api
               exp: pages_read,
             }
           end
-        
+          
           render json: response_data
         end
       end

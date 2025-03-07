@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { BookStack } from "@/components/BookStackCard";
 import { apiV1Post } from "@/api/api";
 import { useBooks } from "@/hooks/useBooks";
-import { Covered_By_Your_Grace } from "next/font/google";
+import { useParams, useRouter } from "next/navigation";
+import type { Book } from "@/hooks/useBooks";
 
 // Google Books API のレスポンスの型を定義
 interface VolumeInfo {
@@ -51,7 +50,13 @@ export default function AddBook() {
   const [bookData, setBookData] = useState<BookData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { books, isLoading, isError } = useBooks();
+  const { books } = useBooks();
+  // 未読本に限定
+  const unreadBooks = books?.filter((book: Book) => !book.completed);
+
+  const { user_name } = useParams();
+
+  const router = useRouter();
 
   const [isAnimationComplete, setIsAnimationComplete] =
     useState<boolean>(false);
@@ -61,21 +66,35 @@ export default function AddBook() {
     []
   );
   const [bookDataArrayUnread, setBookDataArrayUnread] = useState<
-    any[] | undefined
+    unknown[] | undefined
   >([]);
 
   // 📌 それぞれのオフセットを管理
   const [offsetsNew, setOffsetsNew] = useState<number[]>([]);
   const [offsetsUnread, setOffsetsUnread] = useState<number[]>([]);
 
+  // コンポーネントのマウント時に状態をリセットする
+  useEffect(() => {
+    resetBookState();
+  }, []);
+
+  // 本の状態をリセットする関数
+  const resetBookState = () => {
+    setBookDataArrayNew([]);
+    setBookDataArrayUnread([]);
+    setIsbn("");
+    setBookData([]);
+    setIsAnimationComplete(false);
+    setError(null);
+  };
+
   const totalPagesNew = bookDataArrayNew.reduce(
     (sum, book) => sum + (book.totalPage || 0),
     0
   );
-  const totalPagesUnread = (bookDataArrayUnread || []).reduce(
-    (sum, book) => sum + (book.totalPage || 0),
-    0
-  );
+  const totalPagesUnread = (
+    (bookDataArrayUnread as BookDataForStack[]) || []
+  ).reduce((sum, book) => sum + (book.totalPage || 0), 0);
   const totalPagesSum = Math.floor((totalPagesNew + totalPagesUnread) * 0.1);
 
   const handleIsbnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,10 +169,8 @@ export default function AddBook() {
       totalPage: book.summary.pages ? parseInt(book.summary.pages, 10) : 200, // デフォルト200ページ
     };
 
-    console.log(formattedBook);
-
     // TODO: エラーハンドリング
-    const response = await apiV1Post("/users/books", {
+    await apiV1Post("/users/books", {
       title: book.summary.title,
       total_pages: book.summary.pages ? parseInt(book.summary.pages, 10) : 200,
       isbn: book.isbn,
@@ -161,8 +178,6 @@ export default function AddBook() {
       image_url: book.cover,
       categories: book.summary.categories,
     });
-
-    console.log(response);
 
     setBookDataArrayNew((prevBooks) => {
       const updatedBooks = [formattedBook, ...prevBooks];
@@ -176,12 +191,17 @@ export default function AddBook() {
     // 未読本のリスト（固定データ）
     setBookDataArrayUnread(() => {
       // const updatedBooks = [...prevBooks, ...mockUnreadBooks];
-      const updatedBooks = books;
+      const updatedBooks = unreadBooks;
       setOffsetsUnread(
         updatedBooks?.map(() => Math.floor(Math.random() * 50) - 20) || []
       );
       return updatedBooks;
     });
+  };
+
+  // 「さらに本を追加する」ボタンをクリックした時の処理
+  const handleAddAnotherBook = () => {
+    resetBookState();
   };
 
   return (
@@ -200,17 +220,18 @@ export default function AddBook() {
               transition={{ duration: 1.2, ease: "easeInOut" }}
               style={{
                 color: "#000", // 📌 タイトルの色を黒に変更
-                fontWeight: "bold",
                 fontSize: "2rem",
-                position: "absolute", // 📌 位置を固定
+                position: "relative",
                 top: "0px", // 📌 BookStack に影響を与えないよう上に配置
                 left: "50%",
                 transform: "translateX(-50%)",
               }}
             >
-              積読
-              <div className="text-center mt-3">
-                <strong>標高: {totalPagesSum} mm</strong>
+              <div className="container text-center mt-5 mb-4">
+                <div className="w-50 mx-auto bg-success bg-opacity-10 rounded py-4 px-3">
+                  <h3 className="fw-bold">積読</h3>
+                  <strong className="mt-3">標高: {totalPagesSum} mm</strong>
+                </div>
               </div>
             </motion.h2>
           )}
@@ -226,13 +247,32 @@ export default function AddBook() {
           </motion.div>
 
           <BookStack
-            bookDataArray={bookDataArrayUnread}
+            bookDataArray={bookDataArrayUnread as BookDataForStack[]}
             offsets={offsetsUnread}
           />
+
+          <div className="d-flex justify-content-center mt-5 mb-5">
+            <button
+              className="btn btn-original me-2"
+              onClick={handleAddAnotherBook}
+            >
+              さらに本を追加する
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => router.push(`/${user_name}`)}
+            >
+              戻る
+            </button>
+          </div>
         </div>
       ) : (
         <>
-          <h1 className="text-center mt-4 mb-4">本を追加</h1>
+          <div className="container text-center mt-5 mb-4">
+            <div className="w-25 mx-auto bg-success bg-opacity-10 rounded py-4 px-3">
+              <h3 className="fw-bold">本を追加</h3>
+            </div>
+          </div>
           <div className="mx-auto mb-3 w-50">
             {error && (
               <div className="alert alert-danger mt-3" role="alert">
@@ -260,7 +300,7 @@ export default function AddBook() {
           </div>
 
           {bookData.length > 0 && (
-            <div className="mt-4 mx-auto w-75">
+            <div className="mt-4 mx-auto w-75 mb-5">
               {bookData.map((book, index) => (
                 <div className="card mt-3" key={index}>
                   <div className="card-body">

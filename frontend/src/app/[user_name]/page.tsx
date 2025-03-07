@@ -24,8 +24,6 @@ export default function UserHome() {
 
   const { data: levelData } = useExpLogs();
 
-  console.log(levelData);
-
   const response = useBooks();
   console.log(response.books);
 
@@ -33,14 +31,12 @@ export default function UserHome() {
     .filter((book) => book.completed)
     .map((book) => ({
       title: book.title,
-      category: "infrastructure", // You might want to map this to a real category if available
       totalPage: book.total_pages,
     }));
   const unreadBooks = (response.books || [])
     .filter((book) => book.completed != true)
     .map((book) => ({
       title: book.title,
-      category: "infrastructure", // You might want to map this to a real category if available
       totalPage: book.total_pages,
     }));
 
@@ -66,7 +62,9 @@ export default function UserHome() {
     <div className="container mt-5">
       <div className="d-flex">
         <div>
-          <h2>{user.name} のホーム</h2>
+          <h2 className="fw-bold bg-success bg-opacity-10 rounded text-center py-2 px-3">
+            {user.name} のホーム
+          </h2>
           <p>積読を減らして、経験値を貯めよう！！📚✨</p>
         </div>
         <div className="p-4 d-flex justify-content-center">
@@ -95,7 +93,7 @@ export default function UserHome() {
       <div className="mt-4">
         <ContributionCalenderCard />
       </div>
-      <div className="mt-4 mb-4">
+      <div className="mt-4 mb-5">
         <BooksListCard />
       </div>
     </div>

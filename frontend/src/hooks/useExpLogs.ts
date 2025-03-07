@@ -13,11 +13,15 @@ import { apiV1Get } from "@/api/api";
 // };
 
 export const useExpLogs = () => {
-  const { data, error, isLoading } = useSWR("/users/exp_logs", apiV1Get);
+  const { data, error, isLoading, mutate } = useSWR(
+    "/users/exp_logs",
+    apiV1Get
+  );
 
   return {
     data,
     isLoading,
     isError: error,
+    mutate,
   };
 };

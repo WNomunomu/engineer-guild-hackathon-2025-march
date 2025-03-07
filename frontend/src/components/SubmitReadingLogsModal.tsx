@@ -3,19 +3,32 @@ import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { apiV1Post } from "@/api/api";
 
-import { useBooks, type Book } from "@/hooks/useBooks";
+import { useBooks, useReadingProgress, type Book } from "@/hooks/useBooks";
 
-export const SubmitReadingLogsModal = () => {
+type SubmitReadingLogsModalProps = {
+  alreadySelectedBook?: Book;
+};
+
+export const SubmitReadingLogsModal = (props: SubmitReadingLogsModalProps) => {
+  const { alreadySelectedBook } = props;
+
   const { data, close } = useSubmitReadingLogsModal();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [selectedBook, setSelectedBook] = useState<Book | null | undefined>(
+    alreadySelectedBook
+  );
   const [readAt, setReadAt] = useState(new Date().toISOString().split("T")[0]); // Default to today
-  const [pagesRead, setPagesRead] = useState("");
+  const [startPage, setStartPage] = useState("");
+  const [endPage, setEndPage] = useState("");
 
   const { books } = useBooks();
+
+  const { mutate: mutateReadingProgress } = useReadingProgress(
+    selectedBook?.id ?? 0
+  );
 
   if (books == null) return <></>;
 
@@ -34,30 +47,31 @@ export const SubmitReadingLogsModal = () => {
         throw new Error("読んだ日を入力してください");
       }
 
-      if (!pagesRead) {
+      if (!startPage || !endPage) {
         throw new Error("読んだページ数を入力してください");
+      }
+
+      if (parseInt(startPage) < 1) {
+        throw new Error("開始ページ番号は0以上を入力してください");
+      }
+
+      if (parseInt(endPage) > selectedBook.total_pages) {
+        throw new Error(
+          "終了ページは選択した本の最後のページ番号よりも小さい数字を入力してください"
+        );
       }
 
       const formData = {
         id: selectedBook.id,
         read_at: readAt,
-        pages_read: parseInt(pagesRead || "0", 10),
+        start_page: parseInt(startPage, 10),
+        end_page: parseInt(endPage, 10),
       };
 
       console.log(formData);
       // console.log(selectedBook.current_page)
 
-      const response = await apiV1Post("/users/reading_logs", formData);
-
-      // if (!response.ok) {
-      //   const errorData = await response.json();
-      //   throw new Error(errorData.message || "読書履歴の登録に失敗しました");
-      // }
-
-      console.log(response);
-
-      // const responseData = await response.json();
-      // console.log(responseData);
+      await apiV1Post("/users/reading_logs", formData);
 
       setSuccess(true);
 
@@ -65,10 +79,15 @@ export const SubmitReadingLogsModal = () => {
       setTimeout(() => {
         setSelectedBook(null);
         setReadAt(new Date().toISOString().split("T")[0]);
-        setPagesRead("");
+        setStartPage("");
+        setEndPage("");
         setSuccess(false);
         close();
       }, 1500);
+
+      mutateReadingProgress();
+
+      close();
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -136,19 +155,49 @@ export const SubmitReadingLogsModal = () => {
 
           <div className="mb-3">
             <label htmlFor="pages_read" className="form-label">
-              読んだページ数
+              読んだページ
             </label>
-            <input
-              type="number"
-              className="form-control form-control-original"
-              id="pages_read"
-              name="pages_read"
-              value={pagesRead}
-              onChange={(e) => setPagesRead(e.target.value)}
-              placeholder="読んだページ数を入力してください"
-              min="0"
-              required
-            />
+            <div className="d-flex row align-items-center g-2">
+              <div className="col-auto">
+                <div className="input-group">
+                  <span className="input-group-text">開始</span>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="start_page"
+                    name="start_page"
+                    placeholder="ページ番号"
+                    min="0"
+                    required
+                    onChange={(e) => setStartPage(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="col-auto">
+                <span className="align-middle px-1">から</span>
+              </div>
+
+              <div className="col-auto">
+                <div className="input-group">
+                  <span className="input-group-text">終了</span>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="end_page"
+                    name="end_page"
+                    placeholder="ページ番号"
+                    min="0"
+                    required
+                    onChange={(e) => setEndPage(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="col-auto">
+                <span className="align-middle px-1">まで</span>
+              </div>
+            </div>
           </div>
         </form>
       </Modal.Body>

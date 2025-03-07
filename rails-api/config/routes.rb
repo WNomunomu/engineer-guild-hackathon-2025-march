@@ -12,6 +12,7 @@ Rails.application.routes.draw do
         resources :books, only: [:index, :create, :destroy] do
           collection do
             patch ':isbn', to: 'books#update'
+            get 'reading_progress', to: 'books#reading_progress'
           end
         end
 

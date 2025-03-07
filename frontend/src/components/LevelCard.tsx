@@ -18,7 +18,7 @@ const LevelBar = (props: { level: number }) => {
 
   // TODO: 今後レベルの上限を議論
   // アニメーション的には、1levelの中で経験値によってプログレスバーを動かしたい
-  const maxLevel = 30;
+  const maxLevel = 500;
   const progressPercentage = (level / maxLevel) * 100;
 
   useEffect(() => {

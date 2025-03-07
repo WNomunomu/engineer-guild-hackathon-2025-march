@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 type BookData = {
   title: string;
-  category: string;
   totalPage: number;
 };
 
@@ -24,10 +23,7 @@ export const BookStack = ({
   const reversedBookDataArray = bookDataArray?.reverse();
 
   return (
-    <div
-      className="d-flex flex-column align-items-center overflow-auto p-2"
-      style={{ maxHeight: "350px" }}
-    >
+    <div className="d-flex flex-column align-items-center p-2 w-100">
       {(reversedBookDataArray || []).map((bookData, index) => (
         <div
           key={index}
@@ -37,6 +33,7 @@ export const BookStack = ({
             transform: `translateX(${offsets[index] || 0}px)`,
             height: `${Math.min(80, Math.max(20, bookData.totalPage / 7))}px`, // ページ数で高さ調整
             lineHeight: "1.2",
+            flexShrink: 0, // 高さを強制しない
           }}
         >
           {bookData.title}
@@ -51,8 +48,6 @@ export const BookStackCard = ({
   unreadBooks,
 }: BookStackCardProps) => {
   const [showReadBooks, setShowReadBooks] = useState<boolean>(false);
-
-  // 既読本と未読本のオフセットを独立に管理
   const [readOffsets, setReadOffsets] = useState<number[]>([]);
   const [unreadOffsets, setUnreadOffsets] = useState<number[]>([]);
 
@@ -71,9 +66,13 @@ export const BookStackCard = ({
   const bookDataArray = showReadBooks ? alreadyReadBooks : unreadBooks;
   const offsets = showReadBooks ? readOffsets : unreadOffsets;
 
+  const notBookStackExistMessage = showReadBooks
+    ? "読破した本はまだありません。"
+    : "未読本はまだありません。";
+
   return (
-    <div className="card shadow-sm w-100 h-100">
-      <div className="card-body p-3 text-center">
+    <div className="card shadow-sm w-100" style={{ minHeight: "200px" }}>
+      <div className="card-body p-3 text-center d-flex flex-column">
         <div className="btn-group w-100 mb-3">
           <button
             type="button"
@@ -94,7 +93,13 @@ export const BookStackCard = ({
             既読本の山
           </button>
         </div>
-        <BookStack bookDataArray={bookDataArray} offsets={offsets} />
+        {bookDataArray.length === 0 ? (
+          <p className="flex-grow-1 d-flex align-items-center justify-content-center">
+            {notBookStackExistMessage}
+          </p>
+        ) : (
+          <BookStack bookDataArray={bookDataArray} offsets={offsets} />
+        )}
       </div>
     </div>
   );
