@@ -24,8 +24,6 @@ export default function UserHome() {
 
   const { data: levelData } = useExpLogs();
 
-  console.log(levelData);
-
   const response = useBooks();
   console.log(response.books);
 
