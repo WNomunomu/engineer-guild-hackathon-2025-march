@@ -42,8 +42,11 @@ export default function BookDetail() {
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center mt-4 mb-4">本の詳細</h1>
-
+      <div className="container text-center mt-5 mb-4">
+        <div className="w-50 mx-auto bg-success bg-opacity-10 rounded py-4 px-3">
+          <h3 className="fw-bold">本の詳細</h3>
+        </div>
+      </div>
       {isLoading && (
         <div className="text-center">
           <div className="spinner-border text-primary" role="status">

@@ -264,7 +264,11 @@ export default function AddBook() {
         </div>
       ) : (
         <>
-          <h1 className="text-center mt-4 mb-4">本を追加</h1>
+          <div className="container text-center mt-5 mb-4">
+            <div className="w-25 mx-auto bg-success bg-opacity-10 rounded py-4 px-3">
+              <h3 className="fw-bold">本を追加</h3>
+            </div>
+          </div>
           <div className="mx-auto mb-3 w-50">
             {error && (
               <div className="alert alert-danger mt-3" role="alert">
