@@ -7,6 +7,7 @@ import { BookStack } from "@/components/BookStackCard";
 import { apiV1Post } from "@/api/api";
 import { useBooks } from "@/hooks/useBooks";
 import { useParams, useRouter } from "next/navigation";
+import type { Book } from "@/hooks/useBooks";
 
 // Google Books API のレスポンスの型を定義
 interface VolumeInfo {
@@ -50,6 +51,8 @@ export default function AddBook() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { books } = useBooks();
+  // 未読本に限定
+  const unreadBooks = books?.filter((book: Book) => !book.completed);
 
   const { user_name } = useParams();
 
@@ -188,7 +191,7 @@ export default function AddBook() {
     // 未読本のリスト（固定データ）
     setBookDataArrayUnread(() => {
       // const updatedBooks = [...prevBooks, ...mockUnreadBooks];
-      const updatedBooks = books;
+      const updatedBooks = unreadBooks;
       setOffsetsUnread(
         updatedBooks?.map(() => Math.floor(Math.random() * 50) - 20) || []
       );
@@ -217,17 +220,18 @@ export default function AddBook() {
               transition={{ duration: 1.2, ease: "easeInOut" }}
               style={{
                 color: "#000", // 📌 タイトルの色を黒に変更
-                fontWeight: "bold",
                 fontSize: "2rem",
-                position: "absolute", // 📌 位置を固定
+                position: "relative",
                 top: "0px", // 📌 BookStack に影響を与えないよう上に配置
                 left: "50%",
                 transform: "translateX(-50%)",
               }}
             >
-              積読
-              <div className="text-center mt-3">
-                <strong>標高: {totalPagesSum} mm</strong>
+              <div className="container text-center mt-5 mb-4">
+                <div className="w-50 mx-auto bg-success bg-opacity-10 rounded py-4 px-3">
+                  <h3 className="fw-bold">積読</h3>
+                  <strong className="mt-3">標高: {totalPagesSum} mm</strong>
+                </div>
               </div>
             </motion.h2>
           )}
@@ -247,7 +251,7 @@ export default function AddBook() {
             offsets={offsetsUnread}
           />
 
-          <div className="d-flex justify-content-center mt-5">
+          <div className="d-flex justify-content-center mt-5 mb-5">
             <button
               className="btn btn-original me-2"
               onClick={handleAddAnotherBook}
@@ -296,7 +300,7 @@ export default function AddBook() {
           </div>
 
           {bookData.length > 0 && (
-            <div className="mt-4 mx-auto w-75">
+            <div className="mt-4 mx-auto w-75 mb-5">
               {bookData.map((book, index) => (
                 <div className="card mt-3" key={index}>
                   <div className="card-body">
