@@ -31,14 +31,12 @@ export default function UserHome() {
     .filter((book) => book.completed)
     .map((book) => ({
       title: book.title,
-      category: "infrastructure", // You might want to map this to a real category if available
       totalPage: book.total_pages,
     }));
   const unreadBooks = (response.books || [])
     .filter((book) => book.completed != true)
     .map((book) => ({
       title: book.title,
-      category: "infrastructure", // You might want to map this to a real category if available
       totalPage: book.total_pages,
     }));
 

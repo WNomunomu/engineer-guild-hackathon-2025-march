@@ -2,6 +2,7 @@
 "use client";
 
 import { useBooks } from "@/hooks/useBooks";
+import { useExpLogs } from "@/hooks/useExpLogs";
 import { useReadingStatus } from "@/hooks/useReadingLogs";
 
 type AchievementCardProps = {
@@ -14,7 +15,7 @@ export const AchievementCard = (props: AchievementCardProps) => {
   const { icon, achievement, category } = props;
 
   return (
-    <div className="card shadow-sm p-3 bg-white rounded text-center">
+    <div className="card shadow-sm p-3 bg-white rounded text-center h-100">
       <div className="card-body">
         <span className="material-symbols-outlined">{icon}</span>
         <h5 className="card-title mb-2">{achievement}</h5>
@@ -25,7 +26,7 @@ export const AchievementCard = (props: AchievementCardProps) => {
 };
 
 export const AchievementCardList = () => {
-  const { books, isLoading, isError } = useBooks();
+  const { books } = useBooks();
 
   const { data: readingStatus } = useReadingStatus();
 
@@ -59,7 +60,7 @@ export const AchievementCardList = () => {
       <div className="col-12 col-sm-6 col-md-4 col-lg-2">
         <AchievementCard
           icon="exposure_plus_1"
-          achievement="13,298"
+          achievement={`${(readingStatus?.total_pages ?? 0) * 10}`}
           category="累計獲得経験値"
         />
       </div>
