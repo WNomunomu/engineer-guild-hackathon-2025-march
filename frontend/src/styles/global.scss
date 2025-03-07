@@ -4,6 +4,10 @@
   --tertiary-color: rgba(36, 148, 116, 0.4);
 }
 
+.bg-original {
+  background-color: var(--primary-color);
+}
+
 .btn-original {
   --bs-btn-color: #ffffff;
   --bs-btn-bg: var(--primary-color);
