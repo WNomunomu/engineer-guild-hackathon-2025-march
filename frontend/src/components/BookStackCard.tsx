@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 type BookData = {
   title: string;
-  category: string;
   totalPage: number;
 };
 
@@ -71,6 +70,10 @@ export const BookStackCard = ({
   const bookDataArray = showReadBooks ? alreadyReadBooks : unreadBooks;
   const offsets = showReadBooks ? readOffsets : unreadOffsets;
 
+  const notBookStackExistMessage = showReadBooks
+    ? "読破した本はまだありません。"
+    : "未読本はまだありません。";
+
   return (
     <div className="card shadow-sm w-100 h-100">
       <div className="card-body p-3 text-center">
@@ -94,7 +97,11 @@ export const BookStackCard = ({
             既読本の山
           </button>
         </div>
-        <BookStack bookDataArray={bookDataArray} offsets={offsets} />
+        {bookDataArray.length == 0 ? (
+          <p>{notBookStackExistMessage}</p>
+        ) : (
+          <BookStack bookDataArray={bookDataArray} offsets={offsets} />
+        )}
       </div>
     </div>
   );

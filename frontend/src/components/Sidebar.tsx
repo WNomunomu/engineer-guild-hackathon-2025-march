@@ -42,27 +42,28 @@ export const Sidebar = () => {
         text-white ${isCollapsed ? "sidebar-collapsed" : "sidebar-expanded"}
       `}
     >
-      {/* サイドバー折りたたみボタン */}
-      <button
-        className="btn btn-outline-light position-absolute top-0 end-0 m-2 z-3"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
-        <span className="material-symbols-outlined">
-          {isCollapsed ? "chevron_right" : "chevron_left"}
-        </span>
-      </button>
-
-      {/* アプリケーションタイトル */}
-      {!isCollapsed && (
-        <h3 className="text-center mb-4">
-          <Link
-            href={user_name ? `/${user_name}` : "/"}
-            className="text-white text-decoration-none"
-          >
-            HackBook
-          </Link>
-        </h3>
-      )}
+      <div className="d-flex justify-content-end">
+        {/* アプリケーションタイトル */}
+        {!isCollapsed && (
+          <h3 className="text-center">
+            <Link
+              href={user_name ? `/${user_name}` : "/"}
+              className="text-white text-decoration-none"
+            >
+              HackBook
+            </Link>
+          </h3>
+        )}
+        {/* サイドバー折りたたみボタン */}
+        <a
+          className="text-light m-2 z-3 hover-element cursor-pointer"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          <span className="material-symbols-outlined">
+            {isCollapsed ? "chevron_right" : "chevron_left"}
+          </span>
+        </a>
+      </div>
 
       {/* ナビゲーションメニュー */}
       <ul

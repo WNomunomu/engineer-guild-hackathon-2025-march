@@ -18,6 +18,10 @@ module Api
             end_page: reading_log_params[:end_page], 
             book: book
           )
+
+          # 読破したかチェック
+          book.check_is_completed
+
           if reading_log.persisted?
             render json: { message: 'Reading log saved', log: reading_log }, status: :created
           else
@@ -27,7 +31,15 @@ module Api
 
         def index
           logs = current_api_v1_user.reading_logs
-          render json: logs
+          
+          stats = {
+            total_pages: calculate_total_pages(logs),
+            streak_days: calculate_streak_days(logs),
+            weekly_pages: calculate_weekly_pages(logs),
+            monthly_pages: calculate_monthly_pages(logs)
+          }
+
+          render json: stats
         end
 
         def retrieve_by_date
@@ -51,6 +63,48 @@ module Api
 
         def reading_log_params
           params.permit(:id, :read_at, :start_page, :end_page)
+        end
+
+        private
+  
+        def calculate_total_pages(logs)
+          logs.sum("end_page - start_page + 1")
+        end
+
+        def calculate_total_exp(exp_logs)
+          exp_logs.sum("exp_points")
+        end
+        
+        def calculate_streak_days(logs)
+          # 日付でグループ化して連続日数を計算
+          dates = logs.pluck(:read_at).compact.uniq.sort
+          return 0 if dates.empty?
+          
+          current_streak = 1
+          max_streak = 1
+          
+          (1...dates.length).each do |i|
+            if dates[i] == dates[i-1] + 1.day
+              current_streak += 1
+              max_streak = [max_streak, current_streak].max
+            else
+              current_streak = 1
+            end
+          end
+          
+          max_streak
+        end
+        
+        def calculate_weekly_pages(logs)
+          start_of_week = Date.today.beginning_of_week
+          logs.where("read_at >= ?", start_of_week)
+              .sum("end_page - start_page + 1")
+        end
+        
+        def calculate_monthly_pages(logs)
+          start_of_month = Date.today.beginning_of_month
+          logs.where("read_at >= ?", start_of_month)
+              .sum("end_page - start_page + 1") 
         end
       end
     end

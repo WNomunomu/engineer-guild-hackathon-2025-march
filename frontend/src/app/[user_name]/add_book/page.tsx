@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { BookStack } from "@/components/BookStackCard";
 import { apiV1Post } from "@/api/api";
 import { useBooks } from "@/hooks/useBooks";
-import { Covered_By_Your_Grace } from "next/font/google";
+import { useParams, useRouter } from "next/navigation";
 
 // Google Books API のレスポンスの型を定義
 interface VolumeInfo {
@@ -51,7 +49,11 @@ export default function AddBook() {
   const [bookData, setBookData] = useState<BookData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { books, isLoading, isError } = useBooks();
+  const { books } = useBooks();
+
+  const { user_name } = useParams();
+
+  const router = useRouter();
 
   const [isAnimationComplete, setIsAnimationComplete] =
     useState<boolean>(false);
@@ -61,21 +63,35 @@ export default function AddBook() {
     []
   );
   const [bookDataArrayUnread, setBookDataArrayUnread] = useState<
-    any[] | undefined
+    unknown[] | undefined
   >([]);
 
   // 📌 それぞれのオフセットを管理
   const [offsetsNew, setOffsetsNew] = useState<number[]>([]);
   const [offsetsUnread, setOffsetsUnread] = useState<number[]>([]);
 
+  // コンポーネントのマウント時に状態をリセットする
+  useEffect(() => {
+    resetBookState();
+  }, []);
+
+  // 本の状態をリセットする関数
+  const resetBookState = () => {
+    setBookDataArrayNew([]);
+    setBookDataArrayUnread([]);
+    setIsbn("");
+    setBookData([]);
+    setIsAnimationComplete(false);
+    setError(null);
+  };
+
   const totalPagesNew = bookDataArrayNew.reduce(
     (sum, book) => sum + (book.totalPage || 0),
     0
   );
-  const totalPagesUnread = (bookDataArrayUnread || []).reduce(
-    (sum, book) => sum + (book.totalPage || 0),
-    0
-  );
+  const totalPagesUnread = (
+    (bookDataArrayUnread as BookDataForStack[]) || []
+  ).reduce((sum, book) => sum + (book.totalPage || 0), 0);
   const totalPagesSum = Math.floor((totalPagesNew + totalPagesUnread) * 0.1);
 
   const handleIsbnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,10 +166,8 @@ export default function AddBook() {
       totalPage: book.summary.pages ? parseInt(book.summary.pages, 10) : 200, // デフォルト200ページ
     };
 
-    console.log(formattedBook);
-
     // TODO: エラーハンドリング
-    const response = await apiV1Post("/users/books", {
+    await apiV1Post("/users/books", {
       title: book.summary.title,
       total_pages: book.summary.pages ? parseInt(book.summary.pages, 10) : 200,
       isbn: book.isbn,
@@ -161,8 +175,6 @@ export default function AddBook() {
       image_url: book.cover,
       categories: book.summary.categories,
     });
-
-    console.log(response);
 
     setBookDataArrayNew((prevBooks) => {
       const updatedBooks = [formattedBook, ...prevBooks];
@@ -182,6 +194,11 @@ export default function AddBook() {
       );
       return updatedBooks;
     });
+  };
+
+  // 「さらに本を追加する」ボタンをクリックした時の処理
+  const handleAddAnotherBook = () => {
+    resetBookState();
   };
 
   return (
@@ -226,9 +243,24 @@ export default function AddBook() {
           </motion.div>
 
           <BookStack
-            bookDataArray={bookDataArrayUnread}
+            bookDataArray={bookDataArrayUnread as BookDataForStack[]}
             offsets={offsetsUnread}
           />
+
+          <div className="d-flex justify-content-center mt-5">
+            <button
+              className="btn btn-original me-2"
+              onClick={handleAddAnotherBook}
+            >
+              さらに本を追加する
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => router.push(`/${user_name}`)}
+            >
+              戻る
+            </button>
+          </div>
         </div>
       ) : (
         <>
