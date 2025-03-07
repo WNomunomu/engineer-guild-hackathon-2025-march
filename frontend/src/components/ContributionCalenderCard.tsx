@@ -7,8 +7,8 @@ import { apiV1Get } from "@/api/api";
 import { useReadingLogsBetweenDate } from "@/hooks/useReadingLogs";
 
 export const ContributionCalenderCard = () => {
-  const [startDate, setStartDate] = useState("2024-04-04");
-  const [endDate, setEndDate] = useState("2025-04-04");
+  const [startDate, setStartDate] = useState("2025-01-01");
+  const [endDate, setEndDate] = useState("2025-12-31");
   const [normalizedData, setNormalizedData] = useState([]);
 
   const { readingLogs, isLoading, isError } = useReadingLogsBetweenDate(
@@ -91,7 +91,7 @@ export const ContributionCalenderCard = () => {
         <div className="d-flex row w-100">
           <div>
             <h5 className="mb-3">
-              {new Date(startDate).getFullYear()} Reading Logs
+              {new Date(startDate).getFullYear()} 読書ログ
             </h5>
           </div>
           <div className="col-10 d-flex" ref={containerRef}>
