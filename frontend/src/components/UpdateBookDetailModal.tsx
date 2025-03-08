@@ -23,7 +23,7 @@ export const UpdateBookDetailModal = () => {
   const selectedBook = books.find((book) => book.id.toString() === bookId);
 
   if (!selectedBook) {
-    return <div>指定された本が見つかりませんでした。</div>;
+    return <></>;
   }
 
   const isOpened = data?.isOpened ?? false;
