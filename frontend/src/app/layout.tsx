@@ -23,7 +23,7 @@ const lora = Lora({
 export const metadata: Metadata = {
   title: "Hack Book",
   description:
-    "A gamified reading app designed for software engineers who want to level up their skills but struggle with motivation.",
+    "モチベーションに悩むソフトウェアエンジニアのためにデザインされたゲーミフィケーション要素を取り入れた読書アプリ",
 };
 
 export default function RootLayout({
