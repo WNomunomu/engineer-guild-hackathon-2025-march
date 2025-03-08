@@ -21,7 +21,7 @@ export default function SignUpForm() {
         password,
         password_confirmation: passwordConfirmation,
       });
-      router.push(`/${name}`);
+      router.push("/dashboard");
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "サインアップに失敗しました"
