@@ -3,7 +3,7 @@
 import { useUpdateBookDetailModal } from "@/utils/modal";
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { apiV1Post } from "@/api/api";
+import { apiV1Patch } from "@/api/api";
 import { useParams } from "next/navigation";
 import { useBooks } from "@/hooks/useBooks";
 
@@ -35,16 +35,20 @@ export const UpdateBookDetailModal = () => {
 
       // Filter out empty categories
       const categoryArray = categories.filter((cat) => cat.trim() !== "");
-      console.log(`categoryArray: ${categoryArray}`);
 
       const formData = {
         id: selectedBook.id,
-        categories: categoryArray, // Include categories in the form data
+        categories: categoryArray,
+        total_pages: selectedBook.total_pages,
+        completed: selectedBook.completed,
+        title: selectedBook.title,
+        author: selectedBook.author,
       };
 
-      console.log(formData);
+      console.log(`formData.id: ${formData.id}`);
+      console.log(`formData.categoryArray: ${formData.categories}`);
 
-      await apiV1Post("/users/update_book_categories", formData); // API endpoint for updating categories
+      await apiV1Patch(`/users/books/${selectedBook.id}`, formData); // API endpoint for updating categories
 
       setSuccess(true);
 
@@ -57,6 +61,7 @@ export const UpdateBookDetailModal = () => {
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
+        console.log(`err: ${err.message}`);
       }
     } finally {
       setIsLoading(false);

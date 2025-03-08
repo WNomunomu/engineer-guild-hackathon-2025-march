@@ -61,6 +61,21 @@ export const apiV1Put = async (url: string, data = {}) => {
   }
 };
 
+export const apiV1Patch = async (url: string, data = {}) => {
+  const config = getAuthHeaders();
+  try {
+    const response = await apiClient.patch(url, data, { headers: config });
+    return response.data;
+  } catch (error) {
+    // AxiosError 型を指定
+    if (error instanceof AxiosError) {
+      throw new Error(error.response?.data?.errors);
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};
+
 export const apiV1Delete = async (url: string) => {
   const config = getAuthHeaders();
   try {

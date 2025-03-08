@@ -19,6 +19,7 @@ export default function BookDetail() {
 
   const { books, isLoading, isError, mutate: mutateBooks } = useBooks();
   const book = books?.find((book: Book) => book.id === numericBookId);
+  console.log(`book.categories: ${book?.categories}`);
 
   const { data: readingProgress } = useReadingProgress(numericBookId);
   const { user } = useCurrentUser();
