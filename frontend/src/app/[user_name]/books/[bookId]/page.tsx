@@ -106,6 +106,8 @@ export default function BookDetail() {
                     <p className="card-text mb-2">
                       <strong>ページ数:</strong> {book.total_pages || "不明"}
                     </p>
+                    {/* カテゴリーが取得できないため、一旦コメントアウト */}
+                    {/*
                     <p className="card-text mb-2 d-flex">
                       <strong>カテゴリー:</strong>{" "}
                       <div className="ms-1 d-flex">
@@ -118,6 +120,7 @@ export default function BookDetail() {
                         )}
                       </div>
                     </p>
+                    */}
 
                     <div className="mb-4">
                       <strong>本の進捗</strong>
