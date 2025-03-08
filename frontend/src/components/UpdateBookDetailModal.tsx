@@ -98,7 +98,7 @@ export const UpdateBookDetailModal = () => {
   return (
     <Modal show={isOpened} onHide={close}>
       <Modal.Header closeButton>
-        <Modal.Title>本のカテゴリーを更新</Modal.Title>
+        <Modal.Title>本の登録情報を更新</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {error && <div className="alert alert-danger">{error}</div>}
