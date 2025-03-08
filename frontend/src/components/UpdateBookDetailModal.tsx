@@ -16,6 +16,8 @@ export const UpdateBookDetailModal = () => {
 
   // Manage category inputs dynamically
   const [categories, setCategories] = useState<string[]>([""]);
+  const [totalPages, setTotalPages] = useState<number | string>(""); // For total pages
+  const [completed, setCompleted] = useState<boolean>(false); // For completion status
 
   const { books } = useBooks();
 
@@ -39,14 +41,19 @@ export const UpdateBookDetailModal = () => {
       const formData = {
         id: selectedBook.id,
         categories: categoryArray,
-        total_pages: selectedBook.total_pages,
-        completed: selectedBook.completed,
+        total_pages: totalPages || selectedBook.total_pages, // Use updated total pages or current value
+        completed:
+          completed !== selectedBook.completed
+            ? completed
+            : selectedBook.completed, // Update completed status if changed
         title: selectedBook.title,
         author: selectedBook.author,
       };
 
       console.log(`formData.id: ${formData.id}`);
       console.log(`formData.categoryArray: ${formData.categories}`);
+      console.log(`formData.total_pages: ${formData.total_pages}`);
+      console.log(`formData.completed: ${formData.completed}`);
 
       await apiV1Patch(`/users/books/${selectedBook.id}`, formData); // API endpoint for updating categories
 
@@ -55,6 +62,8 @@ export const UpdateBookDetailModal = () => {
       // Reset form and close modal after short delay to show success message
       setTimeout(() => {
         setCategories([""]); // Reset categories field (reset to 1 empty input)
+        setTotalPages(""); // Reset total pages
+        setCompleted(false); // Reset completed status
         setSuccess(false);
         close();
       }, 1500);
@@ -78,17 +87,23 @@ export const UpdateBookDetailModal = () => {
     setCategories(newCategories);
   };
 
+  const handleTotalPagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTotalPages(e.target.value); // Update total pages
+  };
+
+  const handleCompletedChange = () => {
+    setCompleted(!completed); // Toggle completed status
+  };
+
   return (
     <Modal show={isOpened} onHide={close}>
       <Modal.Header closeButton>
-        <Modal.Title>本のカテゴリーを更新</Modal.Title>
+        <Modal.Title>本の登録情報を更新</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {error && <div className="alert alert-danger">{error}</div>}
         {success && (
-          <div className="alert alert-success">
-            カテゴリーが更新されました！
-          </div>
+          <div className="alert alert-success">本の情報が更新されました！</div>
         )}
 
         <form
@@ -99,14 +114,14 @@ export const UpdateBookDetailModal = () => {
         >
           <div className="mb-3">
             <label htmlFor="categories" className="form-label">
-              カテゴリー
+              カテゴリーを更新
             </label>
 
             {categories.map((category, index) => (
               <div key={index} className="d-flex mb-2">
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control btn-original"
                   id={`category-${index}`}
                   name={`category-${index}`}
                   placeholder="カテゴリーを入力"
@@ -127,6 +142,33 @@ export const UpdateBookDetailModal = () => {
             <small className="form-text text-muted">
               例: Network, OS, Python, JavaScript
             </small>
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="totalPages" className="form-label">
+              総ページ数を更新
+            </label>
+            <input
+              type="number"
+              className="form-control"
+              id="totalPages"
+              placeholder="総ページ数"
+              value={totalPages}
+              onChange={handleTotalPagesChange}
+            />
+          </div>
+
+          <div className="mb-3 form-check">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="completed"
+              checked={completed}
+              onChange={handleCompletedChange}
+            />
+            <label className="form-check-label" htmlFor="completed">
+              既読にする
+            </label>
           </div>
         </form>
       </Modal.Body>
